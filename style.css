@@ -9,9 +9,22 @@
     width: 200px;
     background-color: lightyellow;
     color: black;
-    text-align: center;
+    border: solid 1px;
+
+    box-shadow: 2px 2px 2px gray;
+    text-align: left;
     border-radius: 6px;
-    padding: 5px 0;
+    font-size: medium;
+
+    word-wrap: break-word;
+    word-break: break-word; /*word-break: break-all;*/
+    overflow-wrap: break-word;
+    /*hyphenate-character: auto;*/
+    /*hyphens: auto;*/
+    -moz-hyphens: auto;
+
+
+    padding: 5px 5px;
     z-index: 1;
 }
 
@@ -24,3 +37,19 @@ a:link {color: blue;}
 a:visited {color: blue;}
 a:hover {color: red;}
 a:active {color: yellow;}
+
+body {
+    background-color: #F8F4E7;
+    color: #552800;
+    max-width: 620px;
+    border: 2px solid #552800;
+    border-radius: 5px;
+    outline: 0 solid #552800;
+    padding: 10px 10px 10px 20px;
+    margin: 16px auto;
+}
+
+/* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
+img {
+    border: 2px solid black;
+}
