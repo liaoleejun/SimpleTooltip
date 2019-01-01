@@ -1,0 +1,26 @@
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted blue;
+}
+.tooltiptext {
+    visibility: hidden;
+    position: absolute;
+    width: 400px;
+    background-color: lightyellow;
+    color: black;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    z-index: 1;
+}
+
+.super {
+    vertical-align: super;
+    font-size: 80%;
+}
+
+a:link {color: blue;}
+a:visited {color: blue;}
+a:hover {color: red;}
+a:active {color: yellow;}
