@@ -3,6 +3,7 @@
     display: inline-block;
     border-bottom: 1px dotted blue;
 }
+
 .tooltiptext {
     position: absolute;
     visibility: hidden;
@@ -52,4 +53,20 @@ body {
 /* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
 img {
     border: 2px solid black;
+}
+
+/* 跳到锚点时，高亮文本 */
+*:target {
+    /*background-color: #ffa;*/
+    background-color: #ffa;
+    -webkit-transition: all 1s linear;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-spacing: 0;
+}
+
+.tab {
+    margin-left: 40px
 }
