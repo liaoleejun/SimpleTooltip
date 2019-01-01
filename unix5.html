@@ -13,7 +13,7 @@
         .tooltiptext {
             display: none;
         }
-        
+
         .super {
             vertical-align: super;
             font-size: 80%;
@@ -27,20 +27,33 @@
     <p>First release:</p>
     <p>题记：1969年，26岁的 Ken Thompson。</p>
     <h1>Ken Thompson</h1>
-    <div>Ken，1943年出生，1965年（22岁）本科毕业获学士学位，1966年（23岁）获得硕士学位，学士和硕士修的都是 <div class="tooltip desc" onmouseenter="enter(this)" onmouseleave="leave(this)">EECS<div class="tooltiptext"><h3>电气工程与计算机科学</h3></div></div><div class="tooltip cite super" onmouseenter="enter(this)" onmouseleave="leave(this)">[1]<div class="tooltiptext"><a href="https://en.wikipedia.org/wiki/Ken_Thompson#1960s">https://en.wikipedia.org/wiki/Ken_Thompson#1960s</a></div></div>。硕士毕业同年，他被美国前电信垄断公司AT＆T的研发部门贝尔实验室聘用，负责 <span class="tooltip desc" onmouseenter="enter(this)" onmouseleave="leave(this)">MULTICS<span class="tooltiptext">Multiplexed Information and Computing Service</span></span> 项目，MULTICS是由贝尔实验室和通用电气和MIT合作的项目，是一个庞大，雄心勃勃和创新的操作系统，旨在支持数百个并发用户，不幸的是，该项目很快就变得笨拙，再加上它难以容纳三个以上的同时用户，贝尔实验室的管理层对该项目的进展不满意，最终退出了。
+    <div>Ken，1943年出生，1965年（22岁）本科毕业获学士学位，1966年（23岁）获得硕士学位，学士和硕士修的都是 <div class="tooltip" onmouseenter="enter(this)" onmouseleave="leave(this)">EECS<div class="tooltiptext"><h3>电气工程与计算机科学</h3></div></div>
+
+        <div class="tooltip super" onmouseenter="enter(this)" onmouseleave="leave(this)">[1]<div class="tooltiptext"><a href="https://en.wikipedia.org/wiki/Ken_Thompson#1960s">https://en.wikipedia.org/wiki/Ken_Thompson#1960s</a></div></div>。硕士毕业同年，他被美国前电信垄断公司AT＆T的研发部门贝尔实验室聘用，负责 <div class="tooltip" onmouseenter="enter(this)" onmouseleave="leave(this)">MULTICS<div class="tooltiptext">Multiplexed Information and Computing Service</div></div> 项目，MULTICS是由贝尔实验室和通用电气和MIT合作的项目，是一个庞大，雄心勃勃和创新的操作系统，旨在支持数百个并发用户，不幸的是，该项目很快就变得笨拙，再加上它难以容纳三个以上的同时用户，贝尔实验室的管理层对该项目的进展不满意，最终退出了。
     </div>
 </div>
 
 <script>
 
-    function enter(x) {
-        setTimeout(function(){ x.style.color = "red"; }, 100);
+    function enter(elem) {
+        // setTimeout(function(){
+        //     console.log(x.childNodes[1].innerHTML);
+        // }, 100);
+
+        setTimeout(function () {
+            elem.style.color = "red";
+        }, 3000);
     }
 
-    function leave(x) {
+    function leave(elem) {
         // setTimeout(function(){ console.log("Wait"); }, 3000);
-        setTimeout(function(){ x.style.color = "black"; }, 100);
-        // x.style.color = "black";
+        // setTimeout(function(){
+        //     x.childNodes[1].innerHTML = "";
+        // }, 100);
+
+        setTimeout(function () {
+            elem.style.color = "black";
+        }, 3000);
     }
     
     // var userSelection = document.getElementsByClassName('tooltip');
