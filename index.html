@@ -18,102 +18,84 @@
     <h1>Ken Thompson</h1>
     <div>
         Ken，1943年出生，1965年（22岁）本科毕业获学士学位，1966年（23岁）获得硕士学位，学士和硕士修的都是
-        <div class="tooltip" onmouseenter="enter(this)" onmouseleave="leave(this)">EECS<div class="tooltiptext">电气工程与计算机科学</div></div>
-        <div class="tooltip super" onmouseenter="enter(this)" onmouseleave="leave(this)">[1]<div class="tooltiptext"><a href="https://en.wikipedia.org/wiki/Ken_Thompson#1960s">https://en.wikipedia.org/wiki/Ken_Thompson#1960s</a></div></div>。硕士毕业同年，他被美国前电信垄断公司AT＆T的研发部门贝尔实验室聘用，负责 <div class="tooltip" onmouseenter="enter(this)" onmouseleave="leave(this)">MULTICS<div class="tooltiptext">Multiplexed Information and Computing Service</div></div> 项目，MULTICS是由贝尔实验室和通用电气和MIT合作的项目，是一个庞大，雄心勃勃和创新的操作系统，旨在支持数百个并发用户，不幸的是，该项目很快就变得笨拙，再加上它难以容纳三个以上的同时用户，贝尔实验室的管理层对该项目的进展不满意，最终退出了。
-    </div>
-    <div>
-        $a^2=1$
+        <div class="tooltip" onmouseenter="enter(this)" onmouseleave="leave(this)" id="haha">EECS<div class="tooltiptext">电气工程与计算机科学</div></div>
+        <div class="tooltip super" onmouseenter="enter(this)" onmouseleave="leave(this)">[1]<div class="tooltiptext"><a href="https://en.wikipedia.org/wiki/Ken_Thompson#1960s">https://en.wikipedia.org/wiki/Ken_Thompson#1960s</a></div></div>。硕士毕业同年，他被美国前电信垄断公司AT＆T的研发部门贝尔实验室聘用，负责 <div class="tooltip" onmouseenter="enter(this)" onmouseleave="leave(this)" id="hehe">MULTICS<div class="tooltiptext">Multiplexed Information and Computing Service</div></div> 项目，该项目是由贝尔实验室和通用电气和MIT合作的项目，是一个庞大，雄心勃勃和创新的操作系统，旨在支持数百个并发用户，不幸的是，该项目很快就变得笨拙，再加上它难以容纳三个以上的同时用户，贝尔实验室的管理层对该项目的进展不满意，最终退出了。1968年8月，即硕士毕业2年后，妻子Bonnie给他生了儿子Corey<div class="tooltip super" onmouseenter="enter(this)" onmouseleave="leave(this)">[2]<div class="tooltiptext">
+        <a href="https://www.princeton.edu/~hos/Mahoney/expotape.htm">https://www.princeton.edu/~hos/Mahoney/expotape.htm</a> we just had a new son, born in August '68</div></div><div class="tooltip super" onmouseenter="enter(this)" onmouseleave="leave(this)">[3]<div class="tooltiptext">
+        <a href="https://encyclopedia2.thefreedictionary.com/Kenneth+Lane+Thompson">https://encyclopedia2.thefreedictionary.com/Kenneth+Lane+Thompson</a> Ken's wife Bonnie and son Corey</div></div>。
     </div>
 </div>
 
 <script>
+    /* elem ---> tooltip (the element that mouse current over, and when it's tooltip) */
     function enter(elem) {
-        // elem ---> the element that mouse current over, and when it's tooltip
-        // elem.childNodes[1] ---> tooltip-text
-        var tooltip = elem.childNodes[1];
+        var tooltiptext = elem.childNodes[1];
+        var tooltiptextMaxWidth = 300;
 
-        // calc the width of tooltip-text
-        // 1. create temp element that id set to temp-for-tooltip-text, have the same content with tooltip-text
-        // 2. calc the temp element width
-        // 3. remove the temp element width
-        var el = document.createElement("span");
-        el.innerHTML = tooltip.innerHTML;
+        /* 临时创建元素, 内容等同于tooltiptext的内容, 以此来测算tooltiptext的宽度 */
+        var el = document.createElement("div");
+        el.style.display = "inline-block";
+        el.innerHTML = tooltiptext.innerHTML;
         el.setAttribute("id", "temp-for-tooltip-text");
         document.body.appendChild(el);
-        var w = document.getElementById('temp-for-tooltip-text').offsetWidth;
-        console.log(w);
+        var tempWidth = document.getElementById('temp-for-tooltip-text').offsetWidth;
+        if (tempWidth > tooltiptextMaxWidth) {
+            document.getElementById('temp-for-tooltip-text').style.width = tooltiptextMaxWidth + "px";
+        }
+        var h = document.getElementById('temp-for-tooltip-text').offsetHeight;
+        console.log(h);
+        /* 删除临时创建的元素 */
         var element = document.getElementById("temp-for-tooltip-text");
         element.parentNode.removeChild(element);
 
-        // 如果tooltip-text长度大于一个设定值boxWidth比如300px，则折行，否则，按照本来长度来
-        var boxWidth = 300;
-        if (w > boxWidth) {
-            tooltip.style.width = boxWidth + "px";
+        /*
+         * 根据临时创建的元素得到的临时宽度，来判断宽度：
+         * 若实际小于tooltiptextMaxWidth，则以实际宽度为准，反之，则设置长度为tooltiptextMaxWidth
+         */
+        var w;
+        if (tempWidth < tooltiptextMaxWidth) {
+            w = tempWidth;
+            tooltiptext.style.width = tempWidth + "px";
         } else {
-            tooltip.style.width = w + "px";
+            w = tooltiptextMaxWidth;
+            tooltiptext.style.width = tooltiptextMaxWidth + "px";
         }
 
-        // console.log(tooltip.style.width);
+        /* 根据鼠标悬浮点，来判断显示tooltiptext：是否需要在上部，是否需要margin */
+        var rect = elem.getBoundingClientRect();
+        var windowWidth = window.innerWidth
+            || document.documentElement.clientWidth
+            || document.body.clientWidth;
 
-        // var w = document.getElementsByClassName("tooltiptext")[0].offsetWidth;
-        // console.log(w);
-        // if(w > 200){
-        //     document.getElementsByClassName("tooltiptext")[0].style.width = "600px";
-        //
-        //
-        // } else {
-        //     document.getElementsByClassName("tooltiptext")[0].setAttribute("width", w);
-        //
-        // }
-        // window.onmouseover=function(e) {
-        //     console.log(e.target.className);
-        // };
+        var windowHeight = window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
+        console.log(rect.top, rect.right, rect.bottom, rect.left);
 
+
+        if (windowHeight - rect.bottom < h) { // 如果鼠标悬浮点距离浏览器底部的长度不足以承载tooltiptext高度
+            elem.childNodes[1].style.bottom = "100%";
+        }
+        console.log(windowWidth - rect.right);
+        if (windowWidth - rect.right < w) {
+            elem.childNodes[1].style["margin-left"] = "-" + tooltiptextMaxWidth + "px";
+        }
+
+        /* 显示 tooltiptext*/
         setTimeout(
             function () {
-                elem.childNodes[1].style.visibility = "visible";
+                elem.childNodes[1].style.display = "block"; // elem.childNodes[1].style.visibility = "visible";
             }, 200
         );
-        // var el = document.createElement("p");
-        // el.appendChild(document.createTextNode('Hello World!'));
-        // console.log(el);
-        // console.log(elem.childNodes[1]);
-        // elem.childNodes[1].appendChild(el);
-
-        // setTimeout(function () {
-        //     elem.style.color = "red";
-        // }, 3000);
     }
 
     function leave(elem) {
         setTimeout(
             function () {
-                elem.childNodes[1].style.visibility = "hidden";
+                // elem.childNodes[1].style.visibility = "hidden";
+                elem.childNodes[1].style.display = "none";
             }, 200
         );
-        // elem.style.visibility = "hidden";
-        // setTimeout(function(){
-        //     elem.childNodes[1].innerHTML = "";
-        // }, 100);
-
-        // setTimeout(function () {
-        //     elem.style.color = "black";
-        // }, 3000);
     }
-    
-    // var userSelection = document.getElementsByClassName('tooltip');
-    //
-    // for(var i = 0; i < userSelection.length; i++) {
-    //     (function(index) {
-    //         userSelection[index].addEventListener("mouseover", function() {
-    //             userSelection[index].style.color = "red";
-    //         });
-    //
-    //         userSelection[index].addEventListener("mouseout", function() {
-    //             userSelection[index].style.color = "black";
-    //         });
-    //     })(i);
-    // }
 </script>
 </body>
 

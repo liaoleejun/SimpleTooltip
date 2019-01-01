@@ -1,3 +1,14 @@
+body {
+    background-color: #F8F4E7;
+    color: #552800;
+    max-width: 650px;
+    border: 2px solid #552800;
+    border-radius: 5px;
+    outline: 0 solid #552800;
+    padding: 10px 10px 10px 20px;
+    margin: 16px auto;
+}
+
 .tooltip {
     position: relative;
     display: inline-block;
@@ -6,7 +17,7 @@
 
 .tooltiptext {
     position: absolute;
-    visibility: hidden;
+    display: none; /*visibility: hidden;*/
     width: 200px;
     padding: 5px 5px;
     margin-left: 0px;
@@ -37,17 +48,6 @@ a:link {color: blue;}
 a:visited {color: blue;}
 a:hover {color: red;}
 a:active {color: yellow;}
-
-body {
-    background-color: #F8F4E7;
-    color: #552800;
-    max-width: 620px;
-    border: 2px solid #552800;
-    border-radius: 5px;
-    outline: 0 solid #552800;
-    padding: 10px 10px 10px 20px;
-    margin: 16px auto;
-}
 
 /* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
 img {
