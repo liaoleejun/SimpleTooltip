@@ -8,6 +8,8 @@
     position: absolute;
     visibility: hidden;
     width: 200px;
+    padding: 5px 5px;
+    margin-left: 0px;
     background-color: lightyellow;
     color: black;
     border: solid 1px;
@@ -23,9 +25,6 @@
     /*hyphenate-character: auto;*/
     /*hyphens: auto;*/
     -moz-hyphens: auto;
-
-
-    padding: 5px 5px;
     z-index: 1;
 }
 
