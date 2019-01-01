@@ -22,8 +22,48 @@
 </div>
 
 <script>
-
     function enter(elem) {
+        // elem ---> the element that mouse current over, and when it's tooltip
+        // elem.childNodes[1] ---> tooltip-text
+        var tooltip = elem.childNodes[1];
+
+        // calc the width of tooltip-text
+        // 1. create temp element that id set to temp-for-tooltip-text, have the same content with tooltip-text
+        // 2. calc the temp element width
+        // 3. remove the temp element width
+        var el = document.createElement("span");
+        el.innerHTML = tooltip.innerHTML;
+        el.setAttribute("id", "temp-for-tooltip-text");
+        document.body.appendChild(el);
+        var w = document.getElementById('temp-for-tooltip-text').offsetWidth;
+        console.log(w);
+        var element = document.getElementById("temp-for-tooltip-text");
+        element.parentNode.removeChild(element);
+
+        // 如果tooltip-text长度大于一个设定值boxWidth比如300px，则折行，否则，按照本来长度来
+        var boxWidth = 400;
+        if (w > boxWidth) {
+            tooltip.style.width = boxWidth + "px";
+        } else {
+            tooltip.style.width = w + "px";
+        }
+
+        // console.log(tooltip.style.width);
+
+        // var w = document.getElementsByClassName("tooltiptext")[0].offsetWidth;
+        // console.log(w);
+        // if(w > 200){
+        //     document.getElementsByClassName("tooltiptext")[0].style.width = "600px";
+        //
+        //
+        // } else {
+        //     document.getElementsByClassName("tooltiptext")[0].setAttribute("width", w);
+        //
+        // }
+        // window.onmouseover=function(e) {
+        //     console.log(e.target.className);
+        // };
+
         setTimeout(
             function () {
                 elem.childNodes[1].style.visibility = "visible";

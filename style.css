@@ -4,9 +4,9 @@
     border-bottom: 1px dotted blue;
 }
 .tooltiptext {
-    visibility: hidden;
     position: absolute;
-    width: 400px;
+    visibility: hidden;
+    width: 200px;
     background-color: lightyellow;
     color: black;
     text-align: center;
