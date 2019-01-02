@@ -9,6 +9,10 @@ body {
     margin: 16px auto;
 }
 
+div.content {
+    line-height: 1.6;
+}
+
 .tooltip {
     position: relative;
     display: inline-block;
