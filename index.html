@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>~UNIX~Ken</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style/style.css">
     <script src="script/MathJaxInline.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="script/jquery-3.3.1.js"></script>
+    <!--<script src="script/MyTooltip.js"></script>-->
 </head>
 <!-- 还是要区分cite和desc，因为后面要分别罗列cite和desc -->
 <!-- 不要这么麻烦，还是用循环试试效果，先看效果，再研究原理 -->
@@ -18,19 +20,18 @@
     <p>题记：1969年，26岁的 Ken Thompson。</p>
     <h1>Ken Thompson</h1>
     <div class="content">
-        Ken，1943年出生，1965年（22岁）本科毕业获学士学位，1966年（23岁）获得硕士学位，学士和硕士修的都是
-        <div class="tooltip" onmouseenter="enter(this)" onmouseleave="leave(this)" id="haha">EECS<div class="tooltiptext">电气工程与计算机科学<br>Electrical Engineering and Computer Science</div></div>
-        <div class="tooltip super" onmouseenter="enter(this)" onmouseleave="leave(this)">[1]<div class="tooltiptext"><a href="https://en.wikipedia.org/wiki/Ken_Thompson#1960s">https://en.wikipedia.org/wiki/Ken_Thompson#1960s</a></div></div>。硕士毕业同年，他被美国前电信垄断公司AT＆T的研发部门贝尔实验室聘用，负责 <div class="tooltip" onmouseenter="enter(this)" onmouseleave="leave(this)" id="hehe">MULTICS<div class="tooltiptext">Multiplexed Information and Computing Service</div></div> 项目，该项目是由贝尔实验室和通用电气和MIT合作的项目，是一个庞大，雄心勃勃和创新的操作系统，旨在支持数百个并发用户，不幸的是，该项目很快就变得笨拙，再加上它难以容纳三个以上的同时用户，贝尔实验室的管理层对该项目的进展不满意，最终退出了。1968年8月，即硕士毕业2年后，妻子Bonnie生了儿子Corey<div class="tooltip super" onmouseenter="enter(this)" onmouseleave="leave(this)">[2]<div class="tooltiptext">
-        <a href="https://www.princeton.edu/~hos/Mahoney/expotape.htm">https://www.princeton.edu/~hos/Mahoney/expotape.htm</a> we just had a new son, born in August '68</div></div><div class="tooltip super" onmouseenter="enter(this)" onmouseleave="leave(this)">[3]<div class="tooltiptext">
-        <a href="https://encyclopedia2.thefreedictionary.com/Kenneth+Lane+Thompson">https://encyclopedia2.thefreedictionary.com/Kenneth+Lane+Thompson</a> Ken's wife Bonnie and son Corey</div></div>。
+        Ken，1943年出生，1965年（22岁）本科毕业获学士学位，1966年（23岁）获得硕士学位，学士和硕士修的都是 <div class="tooltip desc">EECS<div class="tooltip-text">电气工程与计算机科学 Electrical Engineering and Computer Science</div></div><div class="tooltip cite super">[1]<div class="tooltip-text"><a href="https://en.wikipedia.org/wiki/Ken_Thompson#1960s">https://en.wikipedia.org/wiki/Ken_Thompson#1960s</a></div></div>。硕士毕业同年，他被美国前电信垄断公司AT＆T的研发部门贝尔实验室聘用，负责 <div class="tooltip desc">MULTICS<div class="tooltip-text">Multiplexed Information and Computing Service</div></div> 项目，该项目是由贝尔实验室和通用电气和MIT合作的项目，是一个庞大，雄心勃勃和创新的操作系统，旨在支持数百个并发用户，不幸的是，该项目很快就变得笨拙，再加上它难以容纳三个以上的同时用户，贝尔实验室的管理层对该项目的进展不满意，最终退出了。1968年8月，即硕士毕业2年后，妻子Bonnie生了儿子Corey<div class="tooltip cite super">[2]<div class="tooltip-text"><a href="https://www.princeton.edu/~hos/Mahoney/expotape.htm">https://www.princeton.edu/~hos/Mahoney/expotape.htm</a> we just had a new son, born in August '68</div></div><div class="tooltip cite super">[3]<div class="tooltip-text"><a href="https://encyclopedia2.thefreedictionary.com/Kenneth+Lane+Thompson">https://encyclopedia2.thefreedictionary.com/Kenneth+Lane+Thompson</a> Ken's wife Bonnie and son Corey</div></div>
     </div>
 </div>
 
 <script>
-    /* elem ---> tooltip (the element that mouse current over, and when it's tooltip) */
-    function enter(elem) {
-        var tooltiptext = elem.childNodes[1];
-        var tooltiptextMaxWidth = 300;
+    var leaveTimer;
+    var enterTimer;
+
+    $(".tooltip").mouseenter(function() {
+        var that = this;
+        var tooltiptext = $(that).find('div')[0];
+        var tooltiptextMaxWidth = 400;
 
         /* 临时创建元素, 内容等同于tooltiptext的内容, 以此来测算tooltiptext的宽度 */
         var el = document.createElement("div");
@@ -62,7 +63,7 @@
         }
 
         /* 根据鼠标悬浮点，来判断显示tooltiptext：是否需要在上部，是否需要margin */
-        var rect = elem.getBoundingClientRect();
+        var rect = that.getBoundingClientRect();
         var windowWidth = window.innerWidth
             || document.documentElement.clientWidth
             || document.body.clientWidth;
@@ -72,31 +73,39 @@
             || document.body.clientHeight;
         console.log(rect.top, rect.right, rect.bottom, rect.left);
 
-
         if (windowHeight - rect.bottom < h) { // 如果鼠标悬浮点距离浏览器底部的长度不足以承载tooltiptext高度
-            elem.childNodes[1].style.bottom = "100%";
+            that.childNodes[1].style.bottom = "100%";
         }
         console.log(windowWidth - rect.right);
         if (windowWidth - rect.right < w) {
-            elem.childNodes[1].style["margin-left"] = "-" + tooltiptextMaxWidth + "px";
+            that.childNodes[1].style["margin-left"] = "-" + tooltiptextMaxWidth + "px";
         }
 
-        /* 显示 tooltiptext*/
-        setTimeout(
-            function () {
-                elem.childNodes[1].style.display = "block"; // elem.childNodes[1].style.visibility = "visible";
-            }, 200
-        );
-    }
+        enterTimer = setTimeout(function(){
+            $(".tooltip-text").css("display", "none"); // 所有的class为tooltip-text的隐藏
+            $(tooltiptext).css("display", "block");
+            // $('#thumbs div').removeClass('hovered');
+            // $('#thumbs div').removeClass('hoveredYellow');
+            // $(that).addClass('hovered');
+        }, 300);
+        clearTimeout(leaveTimer);
+    });
 
-    function leave(elem) {
-        setTimeout(
-            function () {
-                // elem.childNodes[1].style.visibility = "hidden";
-                elem.childNodes[1].style.display = "none";
-            }, 200
-        );
-    }
+    $(".tooltip").mouseleave(function() {
+        var that = this;
+        var tooltiptext = $(that).find('div')[0];
+        leaveTimer = setTimeout(function() {
+            // tooltiptext.attr("display", "none");
+            // $(tooltiptext).css("display", "block");
+            $(".tooltip-text").css("display", "none"); // 所有的class为tooltip-text的隐藏
+            $(tooltiptext).css("display", "none");
+            // tooltiptext.attr("display", "none");
+            // $('#thumbs div').removeClass('hovered');
+            // $('#thumbs div').removeClass('hoveredYellow');
+            // $(that).addClass('hoveredYellow');
+        }, 300);
+        clearTimeout(enterTimer);
+    });
 </script>
 </body>
 

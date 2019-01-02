@@ -1,3 +1,4 @@
+/* body 样式*/
 body {
     background-color: #F8F4E7;
     color: #552800;
@@ -9,22 +10,34 @@ body {
     margin: 16px auto;
 }
 
+/* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
+img {
+    border: 2px solid black;
+}
+
+/* table设置边框 */
+table, th, td {
+    border: 1px solid black;
+    border-spacing: 0;
+}
+
+/* 行高设置为推荐的 1.6 倍*/
 div.content {
     line-height: 1.6;
 }
 
-.tooltip {
+.tooltip, .desc, .cite {
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted blue;
 }
 
-.tooltiptext {
+.tooltip-text {
     position: absolute;
     display: none; /*visibility: hidden;*/
     width: 200px;
     padding: 5px 5px;
-    margin-left: 0px;
+    margin-left: 0;
     background-color: lightyellow;
     color: black;
     border: solid 1px;
@@ -41,6 +54,8 @@ div.content {
     /*hyphens: auto;*/
     -moz-hyphens: auto;
     z-index: 1;
+
+    line-height: 1.0;
 }
 
 .super {
@@ -48,28 +63,20 @@ div.content {
     font-size: 80%;
 }
 
+/* css实现缩进效果 */
+.tab {
+    margin-left: 40px
+}
+
+/* Link Pseudo-Classes: LV, HA (mnemonic: love, hate)*/
 a:link {color: blue;}
 a:visited {color: blue;}
 a:hover {color: red;}
 a:active {color: yellow;}
-
-/* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
-img {
-    border: 2px solid black;
-}
 
 /* 跳到锚点时，高亮文本 */
 *:target {
     /*background-color: #ffa;*/
     background-color: #ffa;
     -webkit-transition: all 1s linear;
-}
-
-table, th, td {
-    border: 1px solid black;
-    border-spacing: 0;
-}
-
-.tab {
-    margin-left: 40px
 }
