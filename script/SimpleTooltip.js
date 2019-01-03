@@ -1,3 +1,16 @@
+/**
+ * 对以下格式的HTML元素进行Tooltip效果
+ *
+ * <div class="desc tooltip" tttid="xxx">
+ *     CONCEPT
+ *     <div class="tooltip-text">CONCEPT-DESCRIPTION</div>
+ * </div>
+ *
+ * <div class="cite tooltip" tttid="yyy">
+ *     <a href="#aaa">[1]</a>
+ *     <div class="tooltip-text">HTML-ELEMENT</div>
+ * </div>
+ */
 $(document).ready(function () {
     var leaveTimer;
     var enterTimer;
