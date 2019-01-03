@@ -1,5 +1,13 @@
 /**
- * 关联子元素, 并添加上该子元素。
+ * 引用、描述: 关联子元素, 并添加上该子元素。
+ *
+ * <div class="cite" tttid="yyy">
+ * </div>
+ * 变成:
+ * <div class="cite tooltip" tttid="yyy">
+ *     <a href="#aaa">[1]</a>
+ *     <div class="tooltip-text">HTML-ELEMENT</div>
+ * </div>
  *
  * <div class="desc" tttid="xxx">
  *     CONCEPT
@@ -8,14 +16,6 @@
  * <div class="desc tooltip" tttid="xxx">
  *     CONCEPT
  *     <div class="tooltip-text">CONCEPT-DESCRIPTION</div>
- * </div>
- *
- * <div class="cite" tttid="yyy">
- * </div>
- * 变成:
- * <div class="cite tooltip" tttid="yyy">
- *     <a href="#aaa">[1]</a>
- *     <div class="tooltip-text">HTML-ELEMENT</div>
  * </div>
  */
 $(document).ready(function () {
