@@ -17,7 +17,7 @@ $(".tooltip").mouseenter(function() {
         document.getElementById('temp-for-tooltip-text').style.width = tooltiptextMaxWidth + "px";
     }
     var h = document.getElementById('temp-for-tooltip-text').offsetHeight;
-    console.log(h);
+    // console.log(h);
     /* 删除临时创建的元素 */
     var element = document.getElementById("temp-for-tooltip-text");
     element.parentNode.removeChild(element);
@@ -44,14 +44,14 @@ $(".tooltip").mouseenter(function() {
     var windowHeight = window.innerHeight
         || document.documentElement.clientHeight
         || document.body.clientHeight;
-    console.log(rect.top, rect.right, rect.bottom, rect.left);
+    // console.log(rect.top, rect.right, rect.bottom, rect.left);
 
     if (windowHeight - rect.bottom < h) { // 如果鼠标悬浮点距离浏览器底部的长度不足以承载tooltiptext高度
         that.childNodes[1].style.bottom = "100%";
     }
-    console.log(windowWidth - rect.right);
+    // console.log(windowWidth - rect.right);
     if (windowWidth - rect.right < w) {
-        that.childNodes[1].style["margin-left"] = "-" + tooltiptextMaxWidth + "px";
+        that.childNodes[1].style["margin-left"] = "-" + w + "px";
     }
 
     enterTimer = setTimeout(function(){
@@ -61,6 +61,12 @@ $(".tooltip").mouseenter(function() {
         // $('#thumbs div').removeClass('hoveredYellow');
         // $(that).addClass('hovered');
     }, 300);
+
+    // console.log(that.style.padding.left);
+    // window.getComputedStyle(that);
+
+    // const style = getComputedStyle(that);
+    // console.log(style);
     clearTimeout(leaveTimer);
 });
 

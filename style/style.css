@@ -32,11 +32,11 @@ div.content {
     border-bottom: 1px dotted blue;
 }
 
-.tooltip-text {
+.tooltip-text, #temp-for-tooltip-text {
     position: absolute;
     display: none; /*visibility: hidden;*/
-    width: 200px;
-    padding: 5px 5px;
+    /*width: 200px;*/
+    padding: 5px 2px;
     margin-left: 0;
     background-color: lightyellow;
     color: black;
