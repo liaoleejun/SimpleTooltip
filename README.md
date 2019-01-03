@@ -1,0 +1,3 @@
+## 为什么采用在html的body末尾append元素，而不是在tooltip直接测试
+
+因为在原地tooltip直接添加，因为原地生成的元素会继承父类的width，所以当初是考虑到这点才在body末尾生成临时元素。

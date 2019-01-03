@@ -1,0 +1,14 @@
+DONE
+
+  margin-left修改为w
+  宽度逻辑要到考虑padding
+
+TODO
+
+  右边有问题（找到原因，是因为width算了padding两遍）。但是不能在原地
+    生成元素，因为原地生成的元素会继承父类的width，所以当初是考虑到这
+    点才在body末尾生成临时元素。display:none和visibility:hidden是
+    否占用空间
+  所有的数字硬编码，尽量用变量代替，这样就可以一改全改
+
+  display:none和visibility:hidden是否占用空间
