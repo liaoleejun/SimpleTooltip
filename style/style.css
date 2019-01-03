@@ -10,6 +10,10 @@ body {
     margin: 16px auto;
 }
 
+h2 {
+    color: green;
+}
+
 /* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
 img {
     border: 2px solid black;
@@ -26,9 +30,18 @@ div.content {
     line-height: 1.6;
 }
 
-.tooltip, .desc, .cite {
+.cite, .desc {
     position: relative;
     display: inline-block;
+}
+
+/* cite 设置为上标形式 */
+.cite {
+    vertical-align: super;
+    font-size: 80%;
+}
+
+.desc {
     border-bottom: 1px dotted blue;
 }
 
@@ -64,21 +77,29 @@ div.content {
     hyphens: none;
 }
 
-.super {
-    vertical-align: super;
-    font-size: 80%;
-}
-
 /* css实现缩进效果 */
 .tab {
     margin-left: 40px
 }
 
 /* Link Pseudo-Classes: LV, HA (mnemonic: love, hate)*/
-a:link {color: blue;}
-a:visited {color: blue;}
-a:hover {color: red;}
-a:active {color: yellow;}
+a:link {
+    color: blue;
+    text-decoration: none;
+}
+
+a:visited {
+    color: blue;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: red;
+}
+
+a:active {
+
+}
 
 /* 跳到锚点时，高亮文本 */
 *:target {
