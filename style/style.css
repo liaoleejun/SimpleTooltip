@@ -36,7 +36,7 @@ div.content {
     position: absolute;
     display: none; /*visibility: hidden;*/
     /*width: 50px;*/ /* #temp-for-tooltip-text 和 .tooltip-text 的样式一致，所以不能提前设置 width */
-    padding: 5px 2px;
+    padding: 5px 5px;
     margin-left: 0;
     background-color: lightyellow;
     color: black;

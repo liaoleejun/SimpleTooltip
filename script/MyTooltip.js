@@ -17,6 +17,12 @@ $(".tooltip").mouseenter(function() {
         document.getElementById('temp-for-tooltip-text').style.width = tooltiptextMaxWidth + "px";
     }
     var h = document.getElementById('temp-for-tooltip-text').offsetHeight;
+
+    // Get the height of an element minus padding, margin, border widths
+    // https://stackoverflow.com/q/25197184
+    var style = window.getComputedStyle(document.getElementById("temp-for-tooltip-text"), null);
+    var tooltiptextWidth = style.getPropertyValue("width");
+
     // console.log(h);
     /* 删除临时创建的元素 */
     var element = document.getElementById("temp-for-tooltip-text");
@@ -28,8 +34,9 @@ $(".tooltip").mouseenter(function() {
      */
     var w;
     if (tempWidth < tooltiptextMaxWidth) {
-        w = tempWidth;
-        tooltiptext.style.width = tempWidth + "px";
+        // w = tempWidth - 12; // 减去 padding, margin, border
+        // tooltiptext.style.width = w + "px";
+        tooltiptext.style.width = tooltiptextWidth;
     } else {
         w = tooltiptextMaxWidth;
         tooltiptext.style.width = tooltiptextMaxWidth + "px";
