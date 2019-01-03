@@ -26,10 +26,11 @@ $(document).ready(function () {
     let citesOrdered = []; // citesOrdered 是由 tttid 构成的无重复数组，按照在HTML文档中出现的顺序
     for (let i = 0; i < cites.length; i++) {
         let tttid = cites[i].getAttribute('tttid');
-        // Add the class name "tooltip", 因为SimpleTooltip.js是以类名为tooltip来选择的
-        cites[i].classList.add("tooltip");
         // array push only if not exist
         citesOrdered.indexOf(tttid) === -1 ? citesOrdered.push(tttid) : console.log(tttid + " already exists");
+
+        // Add the class name "tooltip", 因为SimpleTooltip.js是以类名为tooltip来选择的
+        cites[i].classList.add("tooltip");
     }
 
     /**
@@ -37,12 +38,16 @@ $(document).ready(function () {
      */
     let descs = $('.desc');
     let descsOrdered = [];
+    let descsConceptOrdered = [];
     for (let i = 0; i < descs.length; i++) {
         let tttid = descs[i].getAttribute('tttid');
-        // Add the class name "tooltip", 因为SimpleTooltip.js是以类名为tooltip来选择的
-        descs[i].classList.add("tooltip");
+        let concept = descs[i].innerHTML;
         // array push only if not exist
         descsOrdered.indexOf(tttid) === -1 ? descsOrdered.push(tttid) : console.log(tttid + " already exists");
+        descsConceptOrdered.indexOf(concept) === -1 ? descsConceptOrdered.push(concept) : console.log(concept + " already exists");
+
+        // Add the class name "tooltip", 因为SimpleTooltip.js是以类名为tooltip来选择的
+        descs[i].classList.add("tooltip");
     }
 
     /**
@@ -57,7 +62,7 @@ $(document).ready(function () {
         // 引用设置锚点
         cites[i].firstChild.setAttribute('href', '#' + tttid);
 
-        // 生成 SimpleTooltip.js 支持的HTML元素
+        // 添加 SimpleTooltip.js 支持的HTML元素
         let ttt = document.createElement('div');
         ttt.setAttribute("class", "tooltip-text");
         ttt.innerHTML = document.getElementById(tttid).innerHTML;
@@ -69,7 +74,7 @@ $(document).ready(function () {
      */
     for (let i = 0; i < descs.length; i++) {
         let tttid = descs[i].getAttribute('tttid');
-        // 生成 SimpleTooltip.js 支持的HTML元素
+        // 添加 SimpleTooltip.js 支持的HTML元素
         let ttt = document.createElement('div');
         ttt.setAttribute("class", "tooltip-text");
         ttt.innerHTML = document.getElementById(tttid).innerHTML;
@@ -92,6 +97,7 @@ $(document).ready(function () {
     for (let i = 0; i < descsOrdered.length; i++) {
         let id = descsOrdered[i];
         let ttt = document.createElement('li');
+        ttt.innerHTML = "<b>" + descsConceptOrdered[i] + "</b>: ";
         ttt.appendChild(document.getElementById(id));
         document.getElementById("descs").appendChild(ttt);
     }
