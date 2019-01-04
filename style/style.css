@@ -38,10 +38,13 @@ div.content {
     display: inline-block;
 }
 
-/* cite 设置为上标形式 */
-.cite {
-    vertical-align: super;
+/* cite 设置为小上标样式 small superscript */
+.cite, .small-sup {
+    /*vertical-align: super;*/
     font-size: 80%;
+    line-height: 1;
+    vertical-align: top;
+    /*mso-text-raise:60%;*/
 }
 
 .desc {
