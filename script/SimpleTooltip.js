@@ -19,7 +19,7 @@ $(document).ready(function () {
 
         var that = this;
         var tooltiptext = $(that).find('div')[0];
-        var tooltiptextMaxWidth = 200;
+        var tooltiptextMaxWidth = 360;
 
         /* 临时创建元素, 内容等同于tooltiptext的内容, 以此来测算tooltiptext的宽度 */
         var el = document.createElement("div");
