@@ -30,6 +30,7 @@ table, th, td {
 /* 行高设置为推荐的 1.6 倍*/
 div.content {
     line-height: 1.6;
+    margin: 20px auto;
 }
 
 .cite, .desc {
