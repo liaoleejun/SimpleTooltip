@@ -78,7 +78,7 @@ div.content {
 }
 
 /* 设置tooltip-text的链接为按字符折行 */
-.tooltip-text a {
+.tooltip-text a, .cite-list a, desc-list a {
     word-break: break-all;
     hyphens: none;
 }
