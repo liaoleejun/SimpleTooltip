@@ -22,3 +22,43 @@ TODO
 
   * 手机端的适配不是很好，设置body的max-width为600px，好像手机端的浏览器
     的字体特别小。
+
+灵感
+
+  * <div class="cite" tttid="foobar"></div> 可以缩短为成 <div cref="#foobar"></div>
+    然后使用 CSS Attribute Selectors 来处理 https://www.w3schools.com/css/css_attribute_selectors.asp
+    如：
+    div[cref] {
+      position: relative;
+      display: inline-block;
+    }
+    div[dref] {
+      position: relative;
+      display: inline-block;
+    }
+
+    cref: cite ref
+    dref: desc ref
+    模仿href, hypertext reference
+    这样更简洁，更直观。在Assoc层，再加上个根据target-cite, target-desc来add class这个逻辑，这样SimpleTooltip层就不用修改。
+
+  * Markdown已经实现了类似的功能，名叫footnote，而且也会自动编号，但是不是所有的Markdown实现都有footnote这个功能，我比较不喜欢Markdown的一点就是实现不一，各家Markdown不一。只是没有高亮显示，没有tooltip这两种功能。注意tooltip在移动设备上没有鼠标，将对这个功能不好使用：Be sure to use tooltips only for supplemental information—not essential text or primary user-experience features—since the presence of tooltips is not obvious and users on mobile devices will not see them at all. https://developers.google.com/web/resources/markdown-syntax
+
+    Markdown似乎是用于写纸质文档的，好像没有显示出屏幕的交互功能。Markdown改改样式就好了（另外，标题也做漂亮点，再原生加上TOC）！！！就是一个产品！！！就叫tMarkdown或者AwesomeTTH！！！Markdown + SmartTooltip，做Markdown的人已经参考了很多东西了
+
+    通过浏览器，在本地上传文件，然后转换。
+
+  * 受维基百科启发的id命名规则:
+    <div class="cite" tttid="gauss-wiki"></div>
+
+    <span id="gauss-wiki">Gauss wikipedia <a href="https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss">https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss</a></span>
+
+    即id等于后面内容的前面几个字符串。
+
+  * 重新统一化、规范化：概念描述、引用链接的命名，现在感觉前者一个是内部，一个外部。
+
+  * 给我这个小写作系统起了个名字，叫: 引用tooltip化
+
+  * 为什么<div><a>xxx</a><div>yyyy</div></div>, 不直接<a>xxx<div></div></a>, 因为标签a不宜有div这些标签, 真的吗？
+
+分析了谷歌的翻译，是在body下面追加一个div，然后确定这个div的位置
