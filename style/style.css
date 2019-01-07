@@ -1,60 +1,10 @@
 @charset "utf-8";
 
-/* body 样式*/
-body {
-    background-color: #F8F4E7;
-    color: #552800;
-    max-width: 600px;
-    border: 2px solid #552800;
-    border-radius: 5px;
-    outline: 0 solid #552800;
-    padding: 10px 10px 10px 20px;
-    margin: 16px auto;
-}
-
-h2 {
-    color: green;
-}
-
-/* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
-img {
-    border: 2px solid black;
-}
-
-/* table设置边框 */
-table, th, td {
-    border: 1px solid black;
-    border-spacing: 0;
-}
-
-/* 行高设置为推荐的 1.6 倍*/
-div.content {
-    line-height: 1.6;
-    margin: 20px auto;
-}
-
-.cite, .desc {
-    position: relative;
-    display: inline-block;
-}
-
-/* cite 设置为小上标样式 small superscript */
-.cite, .small-sup {
-    /*vertical-align: super;*/
-    font-size: 80%;
-    line-height: 1;
-    vertical-align: top;
-    /*mso-text-raise:60%;*/
-}
-
-.desc {
-    border-bottom: 1px dotted blue;
-}
-
-.tooltip-text, #temp-for-tooltip-text {
+div.tooltiptext {
+    display:inline-block;
     position: absolute;
-    display: none; /*visibility: hidden;*/
-    /*width: 50px;*/ /* #temp-for-tooltip-text 和 .tooltip-text 的样式一致，所以不能提前设置 width */
+    max-width: 500px;
+
     padding: 5px 5px;
     margin-left: 0;
     background-color: lightyellow;
@@ -75,41 +25,4 @@ div.content {
     z-index: 1;
 
     line-height: 1.0;
-}
-
-/* 设置tooltip-text的链接为按字符折行 */
-.tooltip-text a, #cites a {
-    word-break: break-all;
-    hyphens: none;
-}
-
-/* css实现缩进效果 */
-.tab {
-    margin-left: 40px
-}
-
-/* Link Pseudo-Classes: LV, HA (mnemonic: love, hate)*/
-a:link {
-    color: blue;
-    text-decoration: none;
-}
-
-a:visited {
-    color: blue;
-}
-
-a:hover {
-    text-decoration: underline;
-    color: red;
-}
-
-a:active {
-
-}
-
-/* 跳到锚点时，高亮文本 */
-*:target {
-    /*background-color: #ffa;*/
-    background-color: #ffa;
-    -webkit-transition: all 1s linear;
 }

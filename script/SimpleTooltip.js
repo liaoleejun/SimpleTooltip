@@ -1,92 +1,184 @@
 /**
- * 对以下格式的HTML元素进行Tooltip效果
+ * Copyright @liaolijun
+ * liaoleejun@gmail.com
  *
- * <div class="desc tooltip" tttid="xxx">
- *     CONCEPT
- *     <div class="tooltip-text">CONCEPT-DESCRIPTION</div>
- * </div>
+ * 一个优秀的Tooltip的修养:
  *
- * <div class="cite tooltip" tttid="yyy">
- *     <a href="#aaa">[1]</a>
- *     <div class="tooltip-text">HTML-ELEMENT</div>
- * </div>
+ * 1. 要保持悬浮0.5秒
+ * 2. 要默认在右下方显示Tooltiptext, 如果无法在默认右下方显示完整显示,
+ *    优秀的Tooltip要自动选择最宽裕的角度显示
+ * 3. 支持视频, 图片, 文字, 链接等等
+ * 4. 字符串overflow断行
+ *
+ * 本js文件的微小缺陷:
+ * 在body底部添加元素的方法, 可以免去在当前元素的宽度限制. 但是,
+ * 会不会有1到2个像素的位差
+ *
+ * 用在当前元素下的子元素下面, 可能不会有1到2个像素的误差
+ */
+
+/**
+ * TODO 获取"鼠标选中"的位置边界矩形 (x, y, h, w)
+ */
+function getSelectBoundingRect() {
+    s = window.getSelection();
+    oRange = s.getRangeAt(0);
+    oRange.getBoundingClientRect();
+    window.scrollY;
+}
+
+
+/**
+ * 获取HTML元素的位置边界矩形 (x, y, h, w)
+ * @param element
+ * @returns {{x: number, y: number, h: number, w: number}}
+ *
+ * Stolen from https://stackoverflow.com/a/1480137/7843026
+ */
+function getElementBoundingRect(element) {
+    // get an element absolute position on the page by cumulative offset
+    let _element = element;
+    let top = 0, left = 0;
+    do {
+        top += _element.offsetTop  || 0;
+        left += _element.offsetLeft || 0;
+        _element = _element.offsetParent;
+    } while(_element);
+
+    let x = left;
+    let y = top;
+
+    // get width and height
+    let rect = element.getBoundingClientRect();
+    let w = rect.width;
+    let h = rect.height;
+
+    return {
+        x: x,
+        y: y,
+        h: h,
+        w: w
+    };
+}
+
+
+function getWindowDim() {
+    let windowWidth = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+    let windowHeight = window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight;
+    return {
+        w: windowWidth,
+        h: windowHeight
+    }
+}
+
+
+/**
+ * 判定 tooltiptext 方位
+ *
+ * 个人偏好是先右边, 先下边. 所以, 优先顺序是右下 > 右上 > 左下 > 左上; 如果按照这个优先
+ * 顺序去选择方位, 都不满足, 那么就默认放在右下角, 因为我测试了右下角会自动递增文档的宽度
+ * 长度, 而负数的px, 不会扩展 HTML 窗口的长度和宽度 (是不是用right, bottom可以向左上角
+ * 自动扩展, 还没测试这个想法, 不过凭直觉不会有负向扩展, 而且向右下角扩展应该是最自然的扩
+ * 展. 不对, 如果设置过长, 应该把宽度自动缩小为body的百分之80%, 不过, 我目前这样可以保证
+ * 在PC窗口正常运行, 而且 Tooltiptext 应该不至于达到这个离谱的程度, 通常都会限制在400px
+ * 以内以方便阅读) 个人习惯偏好可能因人而异, 因时而异, 因地而异. 我的偏好是先右边, 先下边,
+ * 因为我觉得在右下方, 比较好连续阅读.
+ * @param tooltipRect
+ * @param tooltiptextDim
+ */
+function determinateTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该传入tootip 和 tooltiptext, 因为除了Rect和Dim 外还需要其他参数比如border, margin, 咦, 是不是有个函数可以包含这些?
+    let windowDim = getWindowDim();
+    // 优先考虑能否在 tooltip 的右下角放下 tooltiptext
+    if (tooltipRect.x + tooltiptextDim.w < windowDim.w && tooltipRect.y + tooltiptextDim.h < windowDim.h) {
+        return {
+            x: tooltipRect.x,
+            y: tooltipRect.y + tooltipRect.h
+        }
+    // 其次考虑能否在 tooltip 的右上角放下 tooltiptext
+    } else if (tooltipRect.x + tooltiptextDim.w < windowDim.w && tooltiptextDim.h < tooltipRect.y) {
+        return {
+            x: tooltipRect.x,
+            y: tooltipRect.y - tooltiptextDim.h - 10 // TODO 自动获取tooltiptext的padding, border等等
+        }
+    // 再次考虑能否在 tooltip 的左下角放下 tooltiptext
+    } else if (tooltipRect.x + tooltipRect.w < windowDim.w && tooltipRect.y + tooltipRect.h + tooltiptextDim.h < windowDim.h)  {
+        return {
+            x: tooltipRect.x + tooltipRect.w - tooltiptextDim.w,
+            y: tooltipRect.y + tooltipRect.h
+        }
+    // 再再次考虑能否在 tooltip 的左上角放下 tooltiptext
+    } else if (tooltipRect.x > tooltiptextDim.w && tooltipRect.y > tooltiptextDim.h) {
+        return {
+            x: tooltipRect.x + tooltipRect.w - tooltiptextDim.w,
+            y: tooltipRect.y - tooltiptextDim.h - 10 // TODO 自动获取tooltiptext的padding, border等等
+        }
+    // 最后, 如果四个方位都无法放下, 那么就默认放在右下角, 因为右下角是正的px, 会自动扩展
+    // HTML 文档的宽度和高度. 其他方位的是负的px, 超过 HTML 文档的部分不会自动扩展 HTML
+    // 文档的宽度和高度
+    } else {
+        return {
+            x: tooltipRect.x,
+            y: tooltipRect.y + tooltipRect.h
+        }
+    }
+}
+
+/**
+ * <div class="tooltip" data-ref="xxx" ...>
+ * <div>
+ *
+ * 正确显示tooltiptext, 只要两个参数: 位置边界矩形, 内容.
+ *   位置边界矩形由this计算得到, 内容由data-ref指向得到
  */
 $(document).ready(function () {
-    var leaveTimer;
-    var enterTimer;
+    let enterTimer;
+    let leaveTimer;
+    $(".tooltip").hover(function () {
 
-    $(".tooltip").mouseenter(function() {
-
-        var that = this;
-        var tooltiptext = $(that).find('div')[0];
-        var tooltiptextMaxWidth = 360;
-
-        /* 临时创建元素, 内容等同于tooltiptext的内容, 以此来测算tooltiptext的宽度 */
-        var el = document.createElement("div");
-        el.style.display = "inline-block";
-        el.innerHTML = tooltiptext.innerHTML;
-        el.setAttribute("id", "temp-for-tooltip-text");
-        document.body.appendChild(el);
-        var tempWidth = document.getElementById('temp-for-tooltip-text').offsetWidth;
-        if (tempWidth > tooltiptextMaxWidth) {
-            document.getElementById('temp-for-tooltip-text').style.width = tooltiptextMaxWidth + "px";
-        }
-        var h = document.getElementById('temp-for-tooltip-text').offsetHeight;
-
-        // Get the height of an element minus padding, margin, border widths
-        // https://stackoverflow.com/q/25197184
-        var style = window.getComputedStyle(document.getElementById("temp-for-tooltip-text"), null);
-        var tooltiptextWidth = style.getPropertyValue("width");
-
-        /* 删除临时创建的元素 */
-        var element = document.getElementById("temp-for-tooltip-text");
-        element.parentNode.removeChild(element);
-
-        /*
-         * 根据临时创建的元素得到的临时宽度，来判断宽度：
-         * 若实际小于tooltiptextMaxWidth，则以实际宽度为准，反之，则设置长度为tooltiptextMaxWidth
+        /**
+         * 位置, tooltip 与 tooltiptext的位置边界矩形 {x, y, w, h}
+         *
+         * tooltiptext 默认放置在 tooltip 右下角, 因为我感觉这是最佳视角, 只要顺着文章
+         * 往下读即可, 如果 tooltip 右下角长度或宽度不够宽裕, 那么再通过tooltip的边界矩
+         * 形的中心来判断哪个方位最宽裕, 选择最宽裕的那个方位, 所以下面代码块是 tooltiptext
+         * 放置在右下角的边界矩形
          */
-        var w;
-        if (tempWidth < tooltiptextMaxWidth) {
-            // w = tempWidth - 12; // 减去 padding, margin, border
-            // tooltiptext.style.width = w + "px";
-            tooltiptext.style.width = tooltiptextWidth;
-        } else {
-            w = tooltiptextMaxWidth;
-            tooltiptext.style.width = tooltiptextMaxWidth + "px";
-        }
+        let _this = this;
+        let tooltipRect = getElementBoundingRect(_this); // tooltip 边界矩形 (x, y, h, w)
 
-        /* 根据鼠标悬浮点，来判断显示tooltiptext：是否需要在上部，是否需要margin */
-        var rect = that.getBoundingClientRect();
-        var windowWidth = window.innerWidth
-            || document.documentElement.clientWidth
-            || document.body.clientWidth;
+        /**
+         * 内容, 即tooltiptext.
+         *
+         * tooltiptext 来自 tooltip 的属性data-ref的值
+         */
+        let tooltiptext = document.createElement("div");
+        let dataRef = $(_this).attr("data-ref");
+        tooltiptext.innerHTML = $("#" + dataRef).html();
+        $(tooltiptext).attr("class", "tooltiptext");
+        // $(tooltiptext).css({
+        //     "left": tooltipRect.x + "px",
+        //     "top": (tooltipRect.y + tooltipRect.h) + "px"
+        // });
+        $("body").append(tooltiptext);
 
-        var windowHeight = window.innerHeight
-            || document.documentElement.clientHeight
-            || document.body.clientHeight;
+        let tooltiptextW = $(tooltiptext).width();
+        let tooltiptextH = $(tooltiptext).height();
+        let tooltiptextDim = {
+            w: tooltiptextW,
+            h: tooltiptextH
+        };
+        let tooltiptextComputed = determinateTooltiptextXY(tooltipRect, tooltiptextDim);
+        $(tooltiptext).css({
+            "left": tooltiptextComputed.x + "px",
+            "top": tooltiptextComputed.y + "px"
+        });
 
-        if (windowHeight - rect.bottom < h) { // 如果鼠标悬浮点距离浏览器底部的长度不足以承载tooltiptext高度
-            that.childNodes[1].style.bottom = "100%";
-        }
-        if (windowWidth - rect.right < w) {
-            that.childNodes[1].style["margin-left"] = "-" + w + "px";
-        }
-
-        enterTimer = setTimeout(function(){
-            $(".tooltip-text").css("display", "none"); // 所有的class为tooltip-text的隐藏
-            $(tooltiptext).css("display", "block");
-        }, 300);
-
-        clearTimeout(leaveTimer);
-    }).mouseleave(function() {
-        var that = this;
-        var tooltiptext = $(that).find('div')[0];
-        leaveTimer = setTimeout(function() {
-            $(".tooltip-text").css("display", "none"); // 所有的class为tooltip-text的隐藏
-            $(tooltiptext).css("display", "none");
-        }, 300);
-        clearTimeout(enterTimer);
+    }, function () {
+        let element = $(".tooltiptext")[0];
+        element.parentNode.removeChild(element);
     });
-
 });
