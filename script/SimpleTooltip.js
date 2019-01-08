@@ -1,21 +1,31 @@
 /**
- * Copyright @liaolijun
- * liaoleejun@gmail.com
+ * Copyright liaoleejun@gmail.com
  *
  * 一个优秀的Tooltip的修养:
+ *   1. 计算 Tooltiptext的位置, 要求是要挨着Tooltip
+ *   2. Tooltiptext支持HTML标签, 即支持文本, 图片, 音频, 视频, 超链接等等各种富文本
+ *   3. Tooltiptext支持字符串overflow断行
+ *   4. Tooltiptext支持宽度自适应, max-width
+ *   5. Tooltiptext支持自动朝向 (跟着鼠标, 然后只要考虑上下, 这是跟着光标的的)
+ *   6. 支持离开Tooltip保持悬浮几百毫秒, 支持进入Tooltiptext保持悬浮几百毫秒
+ *   7. Tooltip折行而不是换行, 即span形式
+ *   8. 引用编号如何不在开头出现. white-space: nowrap;
+ *   9. 引用编号不会换行, 但是描述可以换行
+ *  10. 可能需要点动画过渡显示Tooltiptext
+ *  11. 最大宽度应该是用户设置的与页面允许的值, 二者中的较小值
  *
- * 1. 要保持悬浮0.5秒
- * 2. 要默认在右下方显示Tooltiptext, 如果无法在默认右下方显示完整显示,
- *    优秀的Tooltip要自动选择最宽裕的角度显示
- * 3. 支持视频, 图片, 文字, 链接等等
- * 4. 字符串overflow断行
- *
- * 本js文件的微小缺陷:
- * 在body底部添加元素的方法, 可以免去在当前元素的宽度限制. 但是,
- * 会不会有1到2个像素的位差
- *
- * 用在当前元素下的子元素下面, 可能不会有1到2个像素的误差
+ * 本js文件可能的微小缺陷:
+ *   Tooltiptext的位置是计算得到的, 会不会有1到2个像素的位差
  */
+
+
+let enterTooltipTimer;
+let leaveTooltipTimer;
+let leaveTooltiptextTimer;
+let i = 0;
+let j = 0;
+let k = 0;
+let l = 0;
 
 /**
  * TODO 获取"鼠标选中"的位置边界矩形 (x, y, h, w)
@@ -127,6 +137,7 @@ function determinateTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该�
     }
 }
 
+
 /**
  * <div class="tooltip" data-ref="xxx" ...>
  * <div>
@@ -135,10 +146,7 @@ function determinateTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该�
  *   位置边界矩形由this计算得到, 内容由data-ref指向得到
  */
 $(document).ready(function () {
-    let enterTimer;
-    let leaveTimer;
-    $(".tooltip").hover(function () {
-
+    $(".tooltip").mouseenter(function () {
         /**
          * 位置, tooltip 与 tooltiptext的位置边界矩形 {x, y, w, h}
          *
@@ -147,38 +155,66 @@ $(document).ready(function () {
          * 形的中心来判断哪个方位最宽裕, 选择最宽裕的那个方位, 所以下面代码块是 tooltiptext
          * 放置在右下角的边界矩形
          */
+        console.log("i: " + i++);
         let _this = this;
         let tooltipRect = getElementBoundingRect(_this); // tooltip 边界矩形 (x, y, h, w)
 
-        /**
-         * 内容, 即tooltiptext.
-         *
-         * tooltiptext 来自 tooltip 的属性data-ref的值
-         */
-        let tooltiptext = document.createElement("div");
-        let dataRef = $(_this).attr("data-ref");
-        tooltiptext.innerHTML = $("#" + dataRef).html();
-        $(tooltiptext).attr("class", "tooltiptext");
-        // $(tooltiptext).css({
-        //     "left": tooltipRect.x + "px",
-        //     "top": (tooltipRect.y + tooltipRect.h) + "px"
-        // });
-        $("body").append(tooltiptext);
+        clearTimeout(leaveTooltipTimer); // 结束"离开"状态
+        clearTimeout(leaveTooltiptextTimer); // 结束"离开"状态
+        enterTooltipTimer = setTimeout(function(){
 
-        let tooltiptextW = $(tooltiptext).width();
-        let tooltiptextH = $(tooltiptext).height();
-        let tooltiptextDim = {
-            w: tooltiptextW,
-            h: tooltiptextH
-        };
-        let tooltiptextComputed = determinateTooltiptextXY(tooltipRect, tooltiptextDim);
-        $(tooltiptext).css({
-            "left": tooltiptextComputed.x + "px",
-            "top": tooltiptextComputed.y + "px"
+            let element = $(".tooltiptext")[0];
+            if (element === undefined) {
+                /**
+                 * 内容, 即tooltiptext.
+                 *
+                 * tooltiptext 来自 tooltip 的属性data-ref的值
+                 */
+                let tooltiptext = document.createElement("div");
+                let dataRef = $(_this).attr("data-ref");
+                tooltiptext.innerHTML = $("#" + dataRef).html();
+                $(tooltiptext).attr("class", "tooltiptext");
+                // $(tooltiptext).css({
+                //     "left": tooltipRect.x + "px",
+                //     "top": (tooltipRect.y + tooltipRect.h) + "px"
+                // });
+                $("body").append(tooltiptext);
+
+                let tooltiptextW = $(tooltiptext).width();
+                let tooltiptextH = $(tooltiptext).height();
+                let tooltiptextDim = {
+                    w: tooltiptextW,
+                    h: tooltiptextH
+                };
+                let tooltiptextComputed = determinateTooltiptextXY(tooltipRect, tooltiptextDim);
+                $(tooltiptext).css({
+                    "left": tooltiptextComputed.x + "px",
+                    "top": tooltiptextComputed.y + "px"
+                });
+            }
+        }, 1000);
+    }).mouseleave(function () {
+        console.log("j: " + j++);
+        clearTimeout(enterTooltipTimer); // 结束"进入"状态
+        leaveTooltipTimer = setTimeout(function () {
+            let element = $(".tooltiptext")[0];
+            if (element !== undefined) {
+                element.parentNode.removeChild(element);
+            }
+        }, 1000);
+
+        $('.tooltiptext').mouseenter(function () {
+            console.log("k: " + k++);
+            clearTimeout(leaveTooltipTimer);
+        }).mouseleave(function () {
+            console.log("l: " + l++);
+
+            leaveTooltipTimer = setTimeout(function () {
+                let element = $(".tooltiptext")[0];
+                if (element !== undefined) {
+                    element.parentNode.removeChild(element);
+                }
+            }, 1000);
         });
-
-    }, function () {
-        let element = $(".tooltiptext")[0];
-        element.parentNode.removeChild(element);
     });
 });
