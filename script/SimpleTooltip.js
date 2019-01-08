@@ -18,15 +18,6 @@
  *   Tooltiptext的位置是计算得到的, 会不会有1到2个像素的位差
  */
 
-
-let enterTooltipTimer;
-let leaveTooltipTimer;
-let leaveTooltiptextTimer;
-let i = 0;
-let j = 0;
-let k = 0;
-let l = 0;
-
 /**
  * TODO 获取"鼠标选中"的位置边界矩形 (x, y, h, w)
  */
@@ -146,6 +137,11 @@ function determinateTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该�
  *   位置边界矩形由this计算得到, 内容由data-ref指向得到
  */
 $(document).ready(function () {
+
+    let enterTooltipTimer;
+    let leaveTooltipTimer;
+    let leaveTooltiptextTimer;
+
     $(".tooltip").mouseenter(function () {
         /**
          * 位置, tooltip 与 tooltiptext的位置边界矩形 {x, y, w, h}
@@ -155,7 +151,6 @@ $(document).ready(function () {
          * 形的中心来判断哪个方位最宽裕, 选择最宽裕的那个方位, 所以下面代码块是 tooltiptext
          * 放置在右下角的边界矩形
          */
-        console.log("i: " + i++);
         let _this = this;
         let tooltipRect = getElementBoundingRect(_this); // tooltip 边界矩形 (x, y, h, w)
 
@@ -194,7 +189,6 @@ $(document).ready(function () {
             }
         }, 1000);
     }).mouseleave(function () {
-        console.log("j: " + j++);
         clearTimeout(enterTooltipTimer); // 结束"进入"状态
         leaveTooltipTimer = setTimeout(function () {
             let element = $(".tooltiptext")[0];
@@ -202,19 +196,20 @@ $(document).ready(function () {
                 element.parentNode.removeChild(element);
             }
         }, 1000);
-
-        $('.tooltiptext').mouseenter(function () {
-            console.log("k: " + k++);
-            clearTimeout(leaveTooltipTimer);
-        }).mouseleave(function () {
-            console.log("l: " + l++);
-
-            leaveTooltipTimer = setTimeout(function () {
-                let element = $(".tooltiptext")[0];
-                if (element !== undefined) {
-                    element.parentNode.removeChild(element);
-                }
-            }, 1000);
-        });
     });
+
+
+    $(document.body).on('mouseenter', '.tooltiptext', [],function () {
+        clearTimeout(leaveTooltipTimer);
+    });
+
+    $(document.body).on('mouseleave', '.tooltiptext', [], function () {
+        leaveTooltipTimer = setTimeout(function () {
+            let element = $(".tooltiptext")[0];
+            if (element !== undefined) {
+                element.parentNode.removeChild(element);
+            }
+        }, 1000);
+    });
+
 });
