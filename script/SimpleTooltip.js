@@ -39,13 +39,14 @@ function getSelectBoundingRect() {
 /**
  * Get element bounding rectangle, relative to the document page.
  * @param element
+ * @returns {{w: (*|jQuery), x: (number|jQuery), h: (*|jQuery), y: (number|jQuery)}}
  */
 function getRectRelativeToPage(element) {
     let x = $(element).offset().left; // Return the offset coordinates for the selected elements, relative to the document.
     let y = $(element).offset().top;
     let w = $(element).outerWidth(); // Return the width of an element (includes padding and border).
     let h = $(element).outerHeight(); // Return the height of an element (includes padding and border).
-    return {x: x, y: y, h: h, w: w};
+    return {x: x, y: y, w: w, h: h};
 }
 
 
@@ -127,8 +128,8 @@ function determineTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该传
 
 /**
  * 监听class为tooltip的元素的鼠标悬浮事件, 浮现tooltiptext
- * <span class="tooltip" data-ref="xxx" ...>
- * <span>
+ * <xxx class="tooltip" data-ref="yyy" ...>
+ * <xxx>
  *
  * 正确显示tooltiptext, 只要两个参数: 位置边界矩形, 内容.
  *   位置边界矩形由this计算得到, 内容由data-ref指向得到
@@ -137,6 +138,7 @@ $(document).ready(function () {
     let enterTooltipTimer;
     let leaveTooltipTimer;
     let leaveTooltiptextTimer;
+
     /**
      * 鼠标进入与离开tooltip时的事件监听处理
      */
