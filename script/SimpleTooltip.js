@@ -37,39 +37,16 @@ function getSelectBoundingRect() {
 
 
 /**
- * Get an element absolute position relate to page
- *
- * 获取HTML元素相对于HTML Page的绝对位置 (边界矩形 (x, y, h, w))
- * Inspired by https://stackoverflow.com/a/1480137/7843026 :)
+ * Get element bounding rectangle, relative to the document page.
  * @param element
- * @returns {{x: number, y: number, h: number, w: number}}
  */
-function getAbsPosRelateToPage(element) {
-    // get an element absolute position on the page by cumulative offset
-    let _element = element;
-    let top = 0, left = 0;
-    do {
-        top += _element.offsetTop  || 0;
-        left += _element.offsetLeft || 0;
-        _element = _element.offsetParent;
-    } while(_element);
-
-    let x = left;
-    let y = top;
-
-    // get width and height
-    let rect = element.getBoundingClientRect();
-    let w = rect.width;
-    let h = rect.height;
-
-    return {
-        x: x,
-        y: y,
-        h: h,
-        w: w
-    };
+function getRectRelativeToPage(element) {
+    let x = $(element).offset().left; // Return the offset coordinates for the selected elements, relative to the document.
+    let y = $(element).offset().top;
+    let w = $(element).outerWidth(); // Return the width of an element (includes padding and border).
+    let h = $(element).outerHeight(); // Return the height of an element (includes padding and border).
+    return {x: x, y: y, h: h, w: w};
 }
-
 
 /**
  * 获取浏览器文档窗口大小
@@ -166,7 +143,7 @@ $(document).ready(function () {
         clearTimeout(leaveTooltipTimer); // 鼠标"离开"Tooltip不到指定时间间隔, 不算离开
         clearTimeout(leaveTooltiptextTimer); // 鼠标"离开"Tooltiptext不到指定时间间隔, 不算离开
         let _this = this;
-        let tooltipRect = getAbsPosRelateToPage(_this); // tooltip 相对于HTML PAGE的边界矩形 (x, y, h, w)
+        let tooltipRect = getRectRelativeToPage(_this); // tooltip 相对于HTML PAGE的边界矩形 (x, y, h, w)
         enterTooltipTimer = setTimeout(function(){
             let element = $(".tooltiptext")[0];
             if (element === undefined) {
