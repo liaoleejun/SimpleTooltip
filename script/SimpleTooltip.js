@@ -48,6 +48,7 @@ function getRectRelativeToPage(element) {
     return {x: x, y: y, h: h, w: w};
 }
 
+
 /**
  * 获取浏览器文档窗口大小
  * @returns {{w: number, h: number}}
@@ -86,7 +87,7 @@ function getWindowDim() {
  * @param tooltipRect
  * @param tooltiptextDim
  */
-function determinateTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该传入tooltip 和 tooltiptext, 因为除了Rect和Dim 外还需要其他参数比如border, margin, 咦, 是不是有个函数可以包含这些?
+function determineTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该传入tooltip 和 tooltiptext, 因为除了Rect和Dim 外还需要其他参数比如border, margin, 咦, 是不是有个函数可以包含这些?
     let windowDim = getWindowDim();
     // 优先考虑能否在 tooltip 的右下角放下 tooltiptext
     if (tooltipRect.x + tooltiptextDim.w < windowDim.w && tooltipRect.y + tooltiptextDim.h < windowDim.h) {
@@ -147,23 +148,34 @@ $(document).ready(function () {
         enterTooltipTimer = setTimeout(function(){
             let element = $(".tooltiptext")[0];
             if (element === undefined) {
-                // 内容, 即tooltiptext. tooltiptext 来自 tooltip 的属性data-ref的值
+                /**
+                 * 追加内容tooltiptext, 在Body底部
+                 * 内容tooltiptext来自tooltip的属性data-ref的值
+                 */
                 let tooltiptext = document.createElement("div");
                 let dataRef = $(_this).attr("data-ref");
                 tooltiptext.innerHTML = $("#" + dataRef).html();
                 $(tooltiptext).attr("class", "tooltiptext");
                 $("body").append(tooltiptext);
 
+                /**
+                 * 获取tooltiptext的宽, 高
+                 * 根据在Body底部追加内容tooltiptext实现
+                 */
                 let tooltiptextW = $(tooltiptext).width();
                 let tooltiptextH = $(tooltiptext).height();
                 let tooltiptextDim = {
-                    w: tooltiptextW,
-                    h: tooltiptextH
+                    h: tooltiptextH,
+                    w: tooltiptextW
                 };
-                let tooltiptextComputed = determinateTooltiptextXY(tooltipRect, tooltiptextDim);
+                /**
+                 * 判定tooltiptext的left和top
+                 * 根据tooltiptext的宽高以及tooltip边界矩形信息(相对于文档), 来判定
+                 */
+                let tooltiptextDetermined = determineTooltiptextXY(tooltipRect, tooltiptextDim);
                 $(tooltiptext).css({
-                    "left": tooltiptextComputed.x + "px",
-                    "top": tooltiptextComputed.y + "px"
+                    "left": tooltiptextDetermined.x + "px",
+                    "top": tooltiptextDetermined.y + "px"
                 });
             }
         }, 500);
@@ -179,7 +191,6 @@ $(document).ready(function () {
 
     /**
      * 鼠标进入与离开tooltiptext时的事件监听处理
-     *
      * 使用jQuery on方法, 使用了event delegation概念
      */
     $(document.body).on('mouseenter', '.tooltiptext', [],function () {
