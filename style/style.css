@@ -3,7 +3,7 @@
 div.tooltiptext {
     display:inline-block;
     position: absolute;
-    max-width: 500px;
+    max-width: 360px;
 
     padding: 5px 5px;
     margin-left: 0;

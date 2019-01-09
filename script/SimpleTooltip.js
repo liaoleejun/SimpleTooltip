@@ -1,22 +1,29 @@
 /**
- * Copyright liaoleejun@gmail.com
+ * Copyright liaoleejun@gmail.com.
  *
- * 一个优秀的Tooltip的修养:
- *   1. 计算 Tooltiptext的位置, 要求是要挨着Tooltip
- *   2. Tooltiptext支持HTML标签, 即支持文本, 图片, 音频, 视频, 超链接等等各种富文本
+ * 始于智, 成于简. 一个优秀的Tooltip的修养:
+ *   1. Tooltiptext的位置要挨着Tooltip出现
+ *   2. Tooltiptext支持HTML标签, 这样就可以支持文本, 图片, 音频, 视频, 超链接等各种富文本
  *   3. Tooltiptext支持字符串overflow断行
  *   4. Tooltiptext支持宽度自适应, max-width
- *   5. Tooltiptext支持自动朝向 (跟着鼠标, 然后只要考虑上下, 这是跟着光标的的)
- *   6. 支持离开Tooltip保持悬浮几百毫秒, 支持进入Tooltiptext保持悬浮几百毫秒
- *   7. Tooltip折行而不是换行, 即span形式
- *   8. 引用编号如何不在开头出现. white-space: nowrap;
- *   9. 引用编号不会换行, 但是描述可以换行
- *  10. 可能需要点动画过渡显示Tooltiptext
+ *   5. Tooltiptext的超链接点击在新标签页打开
+ *   6. Tooltiptext支持自动朝向 (跟着鼠标, 然后只要考虑上下, 这是跟着光标的的)
+ *   7. 支持离开Tooltip保持悬浮几百毫秒, 支持进入Tooltiptext保持悬浮几百毫秒
+ *   8. Tooltip折行而不是换行, 即span形式
+ *   9. 引用编号如何不在开头出现. white-space: nowrap;
+ *  10. 引用编号不会换行, 但是描述可以换行. tooltip换行问题, tooltiptext换行问题.
  *  11. 最大宽度应该是用户设置的与页面允许的值, 二者中的较小值
+ *  12. 可能需要点动画过渡显示Tooltiptext
+ *
+ * Tooltiptext浮现位置:
+ *
  *
  * 本js文件可能的微小缺陷:
- *   Tooltiptext的位置是计算得到的, 会不会有1到2个像素的位差
+ *   Tooltiptext的位置是通过offsetParent()累加计算得到的, 可能会有1到2个像素的位差, 但
+ *   是1到2个像素的位差, 对于计算机屏幕来说真的是千分之一的位差了, 完全不足为虑呀! 目前尚
+ *   未找到更好的方法.
  */
+
 
 /**
  * TODO 获取"鼠标选中"的位置边界矩形 (x, y, h, w)
@@ -30,13 +37,14 @@ function getSelectBoundingRect() {
 
 
 /**
- * 获取HTML元素的位置边界矩形 (x, y, h, w)
+ * Get an element absolute position relate to page
+ *
+ * 获取HTML元素相对于HTML Page的绝对位置 (边界矩形 (x, y, h, w))
+ * Inspired by https://stackoverflow.com/a/1480137/7843026 :)
  * @param element
  * @returns {{x: number, y: number, h: number, w: number}}
- *
- * Stolen from https://stackoverflow.com/a/1480137/7843026
  */
-function getElementBoundingRect(element) {
+function getAbsPosRelateToPage(element) {
     // get an element absolute position on the page by cumulative offset
     let _element = element;
     let top = 0, left = 0;
@@ -63,6 +71,10 @@ function getElementBoundingRect(element) {
 }
 
 
+/**
+ * 获取浏览器文档窗口大小
+ * @returns {{w: number, h: number}}
+ */
 function getWindowDim() {
     let windowWidth = window.innerWidth
         || document.documentElement.clientWidth
@@ -88,10 +100,16 @@ function getWindowDim() {
  * 在PC窗口正常运行, 而且 Tooltiptext 应该不至于达到这个离谱的程度, 通常都会限制在400px
  * 以内以方便阅读) 个人习惯偏好可能因人而异, 因时而异, 因地而异. 我的偏好是先右边, 先下边,
  * 因为我觉得在右下方, 比较好连续阅读.
+ * 位置, tooltip 与 tooltiptext的位置边界矩形 {x, y, w, h}
+ *
+ * tooltiptext 默认放置在 tooltip 右下角, 因为我感觉这是最佳视角, 只要顺着文章
+ * 往下读即可, 如果 tooltip 右下角长度或宽度不够宽裕, 那么再通过tooltip的边界矩
+ * 形的中心来判断哪个方位最宽裕, 选择最宽裕的那个方位, 所以下面代码块是 tooltiptext
+ * 放置在右下角的边界矩形
  * @param tooltipRect
  * @param tooltiptextDim
  */
-function determinateTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该传入tootip 和 tooltiptext, 因为除了Rect和Dim 外还需要其他参数比如border, margin, 咦, 是不是有个函数可以包含这些?
+function determinateTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该传入tooltip 和 tooltiptext, 因为除了Rect和Dim 外还需要其他参数比如border, margin, 咦, 是不是有个函数可以包含这些?
     let windowDim = getWindowDim();
     // 优先考虑能否在 tooltip 的右下角放下 tooltiptext
     if (tooltipRect.x + tooltiptextDim.w < windowDim.w && tooltipRect.y + tooltiptextDim.h < windowDim.h) {
@@ -130,49 +148,33 @@ function determinateTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该�
 
 
 /**
- * <div class="tooltip" data-ref="xxx" ...>
- * <div>
+ * 监听class为tooltip的元素的鼠标悬浮事件, 浮现tooltiptext
+ * <span class="tooltip" data-ref="xxx" ...>
+ * <span>
  *
  * 正确显示tooltiptext, 只要两个参数: 位置边界矩形, 内容.
  *   位置边界矩形由this计算得到, 内容由data-ref指向得到
  */
 $(document).ready(function () {
-
     let enterTooltipTimer;
     let leaveTooltipTimer;
     let leaveTooltiptextTimer;
-
+    /**
+     * 鼠标进入与离开tooltip时的事件监听处理
+     */
     $(".tooltip").mouseenter(function () {
-        /**
-         * 位置, tooltip 与 tooltiptext的位置边界矩形 {x, y, w, h}
-         *
-         * tooltiptext 默认放置在 tooltip 右下角, 因为我感觉这是最佳视角, 只要顺着文章
-         * 往下读即可, 如果 tooltip 右下角长度或宽度不够宽裕, 那么再通过tooltip的边界矩
-         * 形的中心来判断哪个方位最宽裕, 选择最宽裕的那个方位, 所以下面代码块是 tooltiptext
-         * 放置在右下角的边界矩形
-         */
+        clearTimeout(leaveTooltipTimer); // 鼠标"离开"Tooltip不到指定时间间隔, 不算离开
+        clearTimeout(leaveTooltiptextTimer); // 鼠标"离开"Tooltiptext不到指定时间间隔, 不算离开
         let _this = this;
-        let tooltipRect = getElementBoundingRect(_this); // tooltip 边界矩形 (x, y, h, w)
-
-        clearTimeout(leaveTooltipTimer); // 结束"离开"状态
-        clearTimeout(leaveTooltiptextTimer); // 结束"离开"状态
+        let tooltipRect = getAbsPosRelateToPage(_this); // tooltip 相对于HTML PAGE的边界矩形 (x, y, h, w)
         enterTooltipTimer = setTimeout(function(){
-
             let element = $(".tooltiptext")[0];
             if (element === undefined) {
-                /**
-                 * 内容, 即tooltiptext.
-                 *
-                 * tooltiptext 来自 tooltip 的属性data-ref的值
-                 */
+                // 内容, 即tooltiptext. tooltiptext 来自 tooltip 的属性data-ref的值
                 let tooltiptext = document.createElement("div");
                 let dataRef = $(_this).attr("data-ref");
                 tooltiptext.innerHTML = $("#" + dataRef).html();
                 $(tooltiptext).attr("class", "tooltiptext");
-                // $(tooltiptext).css({
-                //     "left": tooltipRect.x + "px",
-                //     "top": (tooltipRect.y + tooltipRect.h) + "px"
-                // });
                 $("body").append(tooltiptext);
 
                 let tooltiptextW = $(tooltiptext).width();
@@ -187,7 +189,7 @@ $(document).ready(function () {
                     "top": tooltiptextComputed.y + "px"
                 });
             }
-        }, 1000);
+        }, 500);
     }).mouseleave(function () {
         clearTimeout(enterTooltipTimer); // 结束"进入"状态
         leaveTooltipTimer = setTimeout(function () {
@@ -195,21 +197,22 @@ $(document).ready(function () {
             if (element !== undefined) {
                 element.parentNode.removeChild(element);
             }
-        }, 1000);
+        }, 500);
     });
 
-
+    /**
+     * 鼠标进入与离开tooltiptext时的事件监听处理
+     *
+     * 使用jQuery on方法, 使用了event delegation概念
+     */
     $(document.body).on('mouseenter', '.tooltiptext', [],function () {
         clearTimeout(leaveTooltipTimer);
-    });
-
-    $(document.body).on('mouseleave', '.tooltiptext', [], function () {
+    }).on('mouseleave', '.tooltiptext', [], function () {
         leaveTooltipTimer = setTimeout(function () {
             let element = $(".tooltiptext")[0];
             if (element !== undefined) {
                 element.parentNode.removeChild(element);
             }
-        }, 1000);
+        }, 500);
     });
-
 });
