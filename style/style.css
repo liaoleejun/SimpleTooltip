@@ -40,6 +40,9 @@ div.content {
     line-height: 1;
     vertical-align: top;
     /*mso-text-raise:60%;*/
+
+    /* let superscript no line break */
+    white-space: nowrap;
 }
 
 .desc {
