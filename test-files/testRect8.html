@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="script/jquery-3.3.1.js"></script>
+</head>
+<body>
+<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus ad aperiam asperiores delectus distinctio dolores, doloribus ducimus, error facilis harum inventore ipsum maiores modi nam nobis odit omnis quia veniam.</div>
+<div>Lorem ipsum dolor sit amet, <span id="foo" style="border-bottom: dotted blue;">foo bar</span> consectetur adipisicing elit. Accusantium architecto <span id="bar" style="border-bottom: dotted blue;">corporis enim fugiat incidunt itaque laborum, nihil officia perferendis quaerat quidem, quis rerum, sunt suscipit temporibus totam veniam voluptatibus</span> voluptatum!</div>
+<br>
+<div id="log"></div>
+<br>
+<div id="baz" style="width: 400px; height: 400px; background-color: red"></div>
+
+<script>
+    // $("#baz").on( "mouseenter", function( event ) {
+    //     $( "#log" ).text( "pageX: " + event.pageX + ", pageY: " + event.pageY + " " + $(this).outerWidth(true));
+    // });
+    $("#baz").mouseenter(function () {
+        console.log(event.pageX)
+    })
+</script>
+
+</body>
+</html>
