@@ -39,8 +39,11 @@
 /**
  * 监听class为tooltip的元素的鼠标悬浮事件, 浮现tooltiptext
  *
- * <xxx class="tooltip" data-ref="yyy" ...>
+ * <xxx class="tooltip" data-ref="foo">
  * <xxx>
+ * 一般是:
+ * <span class="tooltip" data-ref="foo">
+ * <span>
  * 正确显示tooltiptext, 只要两个参数: 位置边界矩形, 内容.
  *   位置边界矩形由this计算得到, 内容由data-ref指向得到
  */
