@@ -15,8 +15,19 @@
  *  11. 最大宽度应该是用户设置的与页面允许的值, 二者中的较小值
  *  12. 可能需要点动画过渡显示Tooltiptext
  *
- * Tooltiptext浮现位置:
+ * Tooltip是否换行, 即Tooltip是一行, 还是多行显示:
+ *   实现了Tooltip多行显示 :)
  *
+ * Tooltiptext是否带箭头:
+ *   1. 带箭头
+ *   2. 不带箭头
+ *   选择了不带箭头的实现方式.
+ *
+ * Tooltiptext的显示位置:
+ *   暂且采用了较简单直观, 固定的方式
+ *   1. 单行的Tooltip, 采用默认右下角, 再根据左墙, 底墙, 右下角的墙角三者的是否会碰壁来做
+ *      调整;
+ *   2. 多行的Tooltip, 采用默认右上角 (暂时这么个逻辑), 再根据是否会碰到底墙来做调整.
  *
  * 本js文件可能的微小缺陷:
  *   Tooltiptext的位置是通过offsetParent()累加计算得到的, 可能会有1到2个像素的位差, 但
@@ -26,35 +37,216 @@
 
 
 /**
- * TODO 获取"鼠标选中"的位置边界矩形 (x, y, h, w)
+ * 监听class为tooltip的元素的鼠标悬浮事件, 浮现tooltiptext
+ *
+ * <xxx class="tooltip" data-ref="yyy" ...>
+ * <xxx>
+ * 正确显示tooltiptext, 只要两个参数: 位置边界矩形, 内容.
+ *   位置边界矩形由this计算得到, 内容由data-ref指向得到
  */
-function getSelectBoundingRect() {
-    s = window.getSelection();
-    oRange = s.getRangeAt(0);
-    oRange.getBoundingClientRect();
-    window.scrollY;
+$(document).ready(function () {
+    let enterTooltipTimer;
+    let leaveTooltipTimer;
+    let leaveTooltiptextTimer;
+
+    // 鼠标进入与离开tooltip时的事件监听
+    $(".tooltip").mouseenter(function () {
+        let _this = this;
+        // let _event = event;
+
+        // 清除鼠标离开Tooltip, Tooltiptext计时
+        clearTimeout(leaveTooltipTimer);
+        clearTimeout(leaveTooltiptextTimer);
+        // 开始鼠标进入逻辑
+        enterTooltipTimer = setTimeout(function () {
+            // 清除已有Tooltiptext
+            // 为什么mouseenter时要做这一步清除? 因为mouse一进入, leaveTooltipTimer,
+            // leaveTooltiptextTimer计时就立马被清除, 就不会删除屏幕上的Tooltiptext,
+            // 所以要加上这一步来清除
+            removeTooltiptext();
+            // 生成当前Tooltiptext
+            createTooltiptext(_this);
+        }, 500);
+    }).mouseleave(function () {
+        // 清除鼠标进入Tooltip计时
+        clearTimeout(enterTooltipTimer);
+        leaveTooltipTimer = setTimeout(function () {
+            removeTooltiptext();
+        }, 500);
+    });
+
+    // 鼠标进入与离开tooltiptext时的事件监听
+    // 使用jQuery on方法, 使用了event delegation概念
+    $(document.body).on("mouseenter", ".tooltiptext", [],
+        function () {
+            clearTimeout(leaveTooltipTimer);
+        }).on("mouseleave", ".tooltiptext", [],
+        function () {
+            leaveTooltipTimer = setTimeout(function () {
+                removeTooltiptext();
+            }, 500);
+        });
+});
+
+
+/**
+ * Create tooltiptext
+ * @param tooltip
+ */
+function createTooltiptext(tooltip) {
+    // 在Body底部, 追加内容tooltiptext;
+    // 内容tooltiptext来自tooltip的属性data-ref的值
+    let tooltiptext = document.createElement("div");
+    let dataRef = $(tooltip).attr("data-ref");
+    tooltiptext.innerHTML = $("#" + dataRef).html();
+    $(tooltiptext).attr("class", "tooltiptext");
+    // 暂时不要tooltiptext的箭头Arrow
+    // $(tooltiptext).append("<div class='arrowAbove'></div>" +
+    //                       "<div class='arrowBelow'></div>");
+
+    // $("body").append(tooltiptext);
+    $(tooltiptext).hide().appendTo("body").fadeIn(200); // jQuery fade in effect
+
+    // placeTooltiptext
+    placeTooltiptext(tooltip, tooltiptext);
+}
+
+
+/**
+ * Remove tooltiptext
+ */
+function removeTooltiptext() {
+    let element = $(".tooltiptext")[0];
+    if (element !== undefined) { // 为什么要做这一步判断? 因为首次鼠标悬浮到tooltip上, 还
+        // 没有tooltiptext, 如果不做这一步判断, js会报错而终止
+        // 继续执行
+        element.parentNode.removeChild(element);
+    }
+}
+
+/**
+ * Place Tooltiptext
+ * 区分讨论tooltip是一行还是多行?
+ *   如果是一行, 默认是放置在右下角, tooltip和tooltiptext左边对齐, 然后判断是在窗口的底
+ *   部, 右边, 右下角, 来做调整
+ *   如果是多行, 默认是放置在tooltip的上面, 左上角, tooltip和tooltiptext右边对齐, 然后
+ *   判断是否在窗口的底部, 来做调整. Note: 如果在是多行, 其实还可以根据鼠标进入的位置来放
+ *   置tooltiptext, 这里为了简单, 暂时不实现这样的逻辑; 其实负责, 应该有简单的级联模型来
+ *   完成.
+ * @param tooltip
+ * @param tooltiptext
+ */
+function placeTooltiptext(tooltip, tooltiptext) {
+    // 获取在Body底部追加的tooltiptext的宽, 高
+    let tooltiptextW = $(tooltiptext).outerWidth(true);
+    let tooltiptextH = $(tooltiptext).outerHeight(true);
+    let tooltipRectRelToPage = getRectRelativeToPage(tooltip);
+    let tooltipRectRelToView = tooltip.getBoundingClientRect();
+    let windowWH = getWindowWH();
+    let tooltiptextLeft;
+    let tooltiptextTop;
+
+    if (isOneline(tooltip)) {
+        // 根据tooltiptext的宽高和tooltip的边界矩形, 判定tooltiptext的left, top
+        tooltiptextLeft = tooltipRectRelToPage.x;
+        tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h;
+
+        // 根据tooltip边界矩形(相对于文档)以及视窗大小, 来调整tooltiptext
+
+        if (tooltipRectRelToView.left + tooltiptextW > windowWH.w &&
+            tooltipRectRelToView.bottom + tooltiptextH < windowWH.h
+        ) {
+            tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
+                - tooltiptextW;
+            tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h;
+        }
+        if (tooltipRectRelToView.bottom + tooltiptextH > windowWH.h &&
+            tooltipRectRelToView.left + tooltiptextW < windowWH.w
+        ) {
+            tooltiptextLeft = tooltipRectRelToPage.x;
+            tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH;
+
+        }
+        if (tooltipRectRelToView.left + tooltiptextW > windowWH.w &&
+            tooltipRectRelToView.bottom + tooltiptextH > windowWH.h
+        ) {
+            tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
+                - tooltiptextW;
+            tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH;
+        }
+    }
+
+    if (! isOneline(tooltip)) {
+        // 根据tooltiptext的宽高和tooltip的边界矩形, 判定tooltiptext的left, top
+        tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
+            - tooltiptextW;
+        tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH;
+
+        if (tooltipRectRelToView.top - tooltiptextH < 0) {
+            tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
+                - tooltiptextW;
+            tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h;
+        }
+    }
+
+    $(tooltiptext).css({
+        "left": tooltiptextLeft + "px",
+        "top": tooltiptextTop + "px"
+    });
+}
+
+
+/**
+ * A wonderful method of determine element is oneline or not
+ *
+ * 搜遍了网上问答, 网络博客, 总结一条思路是先获取元素的Top, left, width, height信息, 再
+ * 获取line-height, 然后前者除以后者来获取行数, 行高没有非常可信靠谱的方法, 包括网友的
+ * computeStyleValue的方法, 这个方法在Chrome下会返回normal. 后面, 还查找了normal是多少
+ * px的字体 https://developer.mozilla.org/en-US/docs/Web/CSS/line-height, 一般
+ * normal默认是1.2倍, 但是这都不靠谱呀. 最后, 突然想到的试探法, 人为先增加空格, 根据这个空
+ * 格得出行高, 再删除这个空格, 是不是非常巧妙?!
+ * $("elem").append("<span id='elem-append-childd'>&nbsp;</span>");
+ * $("elem").prepend("<span id='bar-prepend-childd'>&nbsp;</span>");
+ * $("elem").height();
+ * $("elem-append-childd").height();
+ * @param element
+ */
+function isOneline(element) {
+    $(element).append("<span id='elem-append-childd'>&nbsp;</span>");
+    let elemAppendChildd = $('#elem-append-childd');
+    let elemAppendChilddHeight = elemAppendChildd.height();
+    elemAppendChildd.remove();
+    let elemHeight = $(element).height();
+    return !!(Math.round(elemHeight / elemAppendChilddHeight) === 1);
 }
 
 
 /**
  * Get element bounding rectangle, relative to the document page.
  * @param element
- * @returns {{w: (*|jQuery), x: (number|jQuery), h: (*|jQuery), y: (number|jQuery)}}
+ * @returns {{w: (*|jQuery), x: (number|jQuery), h: (*|jQuery),
+ *            y: (number|jQuery)}}
  */
 function getRectRelativeToPage(element) {
-    let x = $(element).offset().left; // Return the offset coordinates for the selected elements, relative to the document.
+    let x = $(element).offset().left; // Return the offset coordinates for the
+                                      // selected elements, relative to the
+                                      // document.
     let y = $(element).offset().top;
-    let w = $(element).outerWidth(); // Return the width of an element (includes padding and border).
-    let h = $(element).outerHeight(); // Return the height of an element (includes padding and border).
+    let w = $(element).outerWidth(true); // Return the width of an element
+                                         // (includes padding border and
+                                         // margin).
+    let h = $(element).outerHeight(true); // Return the height of an element
+                                          // (includes padding border and
+                                          // margin).
     return {x: x, y: y, w: w, h: h};
 }
 
 
 /**
- * 获取浏览器文档窗口大小
+ * 获取浏览器文档窗口宽高
  * @returns {{w: number, h: number}}
  */
-function getWindowDim() {
+function getWindowWH() {
     let windowWidth = window.innerWidth
         || document.documentElement.clientWidth
         || document.body.clientWidth;
@@ -66,143 +258,3 @@ function getWindowDim() {
         h: windowHeight
     }
 }
-
-
-/**
- * 判定 tooltiptext 方位
- *
- * 个人偏好是先右边, 先下边. 所以, 优先顺序是右下 > 右上 > 左下 > 左上; 如果按照这个优先
- * 顺序去选择方位, 都不满足, 那么就默认放在右下角, 因为我测试了右下角会自动递增文档的宽度
- * 长度, 而负数的px, 不会扩展 HTML 窗口的长度和宽度 (是不是用right, bottom可以向左上角
- * 自动扩展, 还没测试这个想法, 不过凭直觉不会有负向扩展, 而且向右下角扩展应该是最自然的扩
- * 展. 不对, 如果设置过长, 应该把宽度自动缩小为body的百分之80%, 不过, 我目前这样可以保证
- * 在PC窗口正常运行, 而且 Tooltiptext 应该不至于达到这个离谱的程度, 通常都会限制在400px
- * 以内以方便阅读) 个人习惯偏好可能因人而异, 因时而异, 因地而异. 我的偏好是先右边, 先下边,
- * 因为我觉得在右下方, 比较好连续阅读.
- * 位置, tooltip 与 tooltiptext的位置边界矩形 {x, y, w, h}
- *
- * tooltiptext 默认放置在 tooltip 右下角, 因为我感觉这是最佳视角, 只要顺着文章
- * 往下读即可, 如果 tooltip 右下角长度或宽度不够宽裕, 那么再通过tooltip的边界矩
- * 形的中心来判断哪个方位最宽裕, 选择最宽裕的那个方位, 所以下面代码块是 tooltiptext
- * 放置在右下角的边界矩形
- * @param tooltipRect
- * @param tooltiptextDim
- */
-function determineTooltiptextXY(tooltipRect, tooltiptextDim) { // TODO 应该传入tooltip 和 tooltiptext, 因为除了Rect和Dim 外还需要其他参数比如border, margin, 咦, 是不是有个函数可以包含这些?
-    let windowDim = getWindowDim();
-    // 优先考虑能否在 tooltip 的右下角放下 tooltiptext
-    if (tooltipRect.x + tooltiptextDim.w < windowDim.w && tooltipRect.y + tooltiptextDim.h < windowDim.h) {
-        return {
-            x: tooltipRect.x,
-            y: tooltipRect.y + tooltipRect.h
-        }
-    // 其次考虑能否在 tooltip 的右上角放下 tooltiptext
-    } else if (tooltipRect.x + tooltiptextDim.w < windowDim.w && tooltiptextDim.h < tooltipRect.y) {
-        return {
-            x: tooltipRect.x,
-            y: tooltipRect.y - tooltiptextDim.h - 10 // TODO 自动获取tooltiptext的padding, border等等
-        }
-    // 再次考虑能否在 tooltip 的左下角放下 tooltiptext
-    } else if (tooltipRect.x + tooltipRect.w < windowDim.w && tooltipRect.y + tooltipRect.h + tooltiptextDim.h < windowDim.h)  {
-        return {
-            x: tooltipRect.x + tooltipRect.w - tooltiptextDim.w,
-            y: tooltipRect.y + tooltipRect.h
-        }
-    // 再再次考虑能否在 tooltip 的左上角放下 tooltiptext
-    } else if (tooltipRect.x > tooltiptextDim.w && tooltipRect.y > tooltiptextDim.h) {
-        return {
-            x: tooltipRect.x + tooltipRect.w - tooltiptextDim.w,
-            y: tooltipRect.y - tooltiptextDim.h - 10 // TODO 自动获取tooltiptext的padding, border等等
-        }
-    // 最后, 如果四个方位都无法放下, 那么就默认放在右下角, 因为右下角是正的px, 会自动扩展
-    // HTML 文档的宽度和高度. 其他方位的是负的px, 超过 HTML 文档的部分不会自动扩展 HTML
-    // 文档的宽度和高度
-    } else {
-        return {
-            x: tooltipRect.x,
-            y: tooltipRect.y + tooltipRect.h
-        }
-    }
-}
-
-
-/**
- * 监听class为tooltip的元素的鼠标悬浮事件, 浮现tooltiptext
- * <xxx class="tooltip" data-ref="yyy" ...>
- * <xxx>
- *
- * 正确显示tooltiptext, 只要两个参数: 位置边界矩形, 内容.
- *   位置边界矩形由this计算得到, 内容由data-ref指向得到
- */
-$(document).ready(function () {
-    let enterTooltipTimer;
-    let leaveTooltipTimer;
-    let leaveTooltiptextTimer;
-
-    /**
-     * 鼠标进入与离开tooltip时的事件监听处理
-     */
-    $(".tooltip").mouseenter(function () {
-        clearTimeout(leaveTooltipTimer); // 鼠标"离开"Tooltip不到指定时间间隔, 不算离开
-        clearTimeout(leaveTooltiptextTimer); // 鼠标"离开"Tooltiptext不到指定时间间隔, 不算离开
-        let _this = this;
-        let tooltipRect = getRectRelativeToPage(_this); // tooltip 相对于HTML PAGE的边界矩形 (x, y, h, w)
-        enterTooltipTimer = setTimeout(function(){
-            let element = $(".tooltiptext")[0];
-            if (element === undefined) {
-                /**
-                 * 追加内容tooltiptext, 在Body底部
-                 * 内容tooltiptext来自tooltip的属性data-ref的值
-                 */
-                let tooltiptext = document.createElement("div");
-                let dataRef = $(_this).attr("data-ref");
-                tooltiptext.innerHTML = $("#" + dataRef).html();
-                $(tooltiptext).attr("class", "tooltiptext");
-                $("body").append(tooltiptext);
-
-                /**
-                 * 获取tooltiptext的宽, 高
-                 * 根据在Body底部追加内容tooltiptext实现
-                 */
-                let tooltiptextW = $(tooltiptext).width();
-                let tooltiptextH = $(tooltiptext).height();
-                let tooltiptextDim = {
-                    h: tooltiptextH,
-                    w: tooltiptextW
-                };
-                /**
-                 * 判定tooltiptext的left和top
-                 * 根据tooltiptext的宽高以及tooltip边界矩形信息(相对于文档), 来判定
-                 */
-                let tooltiptextDetermined = determineTooltiptextXY(tooltipRect, tooltiptextDim);
-                $(tooltiptext).css({
-                    "left": tooltiptextDetermined.x + "px",
-                    "top": tooltiptextDetermined.y + "px"
-                });
-            }
-        }, 500);
-    }).mouseleave(function () {
-        clearTimeout(enterTooltipTimer); // 结束"进入"状态
-        leaveTooltipTimer = setTimeout(function () {
-            let element = $(".tooltiptext")[0];
-            if (element !== undefined) {
-                element.parentNode.removeChild(element);
-            }
-        }, 500);
-    });
-
-    /**
-     * 鼠标进入与离开tooltiptext时的事件监听处理
-     * 使用jQuery on方法, 使用了event delegation概念
-     */
-    $(document.body).on('mouseenter', '.tooltiptext', [],function () {
-        clearTimeout(leaveTooltipTimer);
-    }).on('mouseleave', '.tooltiptext', [], function () {
-        leaveTooltipTimer = setTimeout(function () {
-            let element = $(".tooltiptext")[0];
-            if (element !== undefined) {
-                element.parentNode.removeChild(element);
-            }
-        }, 500);
-    });
-});

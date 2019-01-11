@@ -26,3 +26,26 @@ div.tooltiptext {
 
     line-height: 1.0;
 }
+
+/* 暂时不实现箭头 */
+/*.arrowAbove {*/
+    /*content: "";*/
+    /*position: absolute;*/
+    /*!*top: 100%; 或者 bottom: 100%*!*/
+    /*!*left: 经过计算得到;*!*/
+    /*border-width: 8px;*/
+    /*border-style: solid;*/
+    /*border-color: lightyellow transparent transparent transparent;*/
+    /*z-index: 1;*/
+/*}*/
+
+/*.arrowBelow {*/
+    /*content: "";*/
+    /*position: absolute;*/
+    /*!*top: 100%; 或者 bottom: 100%*!*/
+    /*!*left: 经过计算得到;*!*/
+    /*margin-left: -1px;*/
+    /*border-width: 9px;*/
+    /*border-style: solid;*/
+    /*border-color: black transparent transparent transparent;*/
+/*}*/
