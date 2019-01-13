@@ -74,4 +74,8 @@ table, th, td {border: 1px solid black; border-spacing: 0;}
 }
 
 /* 设置tooltiptext的链接为按字符折行 */
-.tooltiptext a, #cites a {word-break: break-all; hyphens: none;}
+.tooltiptext a, #cites a {
+    word-break: break-all;
+    hyphens: none;
+    text-decoration: underline;
+}
