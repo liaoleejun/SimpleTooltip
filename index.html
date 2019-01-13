@@ -8,51 +8,51 @@
 
 -->
 <head>
-    <meta charset="UTF-8">
-    <title>UNIX - Ken Thompson 本纪</title>
-    <link rel="stylesheet" href="style/style.css">
+<meta charset="UTF-8">
+<title>UNIX - Ken Thompson 本纪</title>
+<link rel="stylesheet" href="style/style.css">
 
-    <!-- MathJax -->
-    <script src="script/MathJaxInline.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- MathJax -->
+<script src="script/MathJaxInline.js"></script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-    <!-- jQuery -->
-    <script src="script/jquery-3.3.1.js"></script>
+<!-- jQuery -->
+<script src="script/jquery-3.3.1.js"></script>
 
-    <!-- Rank cite number, list cite, and list desc -->
-    <script src="script/CiteNumber.js"></script>
+<!-- Rank cite number, list cite, and list desc -->
+<script src="script/CiteNumber.js"></script>
 
-    <!-- SimpleTooltip-->
-    <script src="script/SimpleTooltip.js"></script>
+<!-- SimpleTooltip-->
+<script src="script/SimpleTooltip.js"></script>
 
-    <!-- Open every link in new tab of browser-->
-    <script src="script/LinkOpenInNewTab.js"></script>
+<!-- Open every link in new tab of browser-->
+<script src="script/LinkOpenInNewTab.js"></script>
 </head>
 
 <body>
-    <code>First release: 2019-01-01</code><br>
-    <code>Update: 2019-01-04</code>
-    <p>题记：1969年，26岁的 Ken Thompson。</p>
-    <h1>UNIX - Ken Thompson 本纪</h1>
-    <p>
-        Ken，1943年出生，1965年（22岁）本科毕业获学士学位，1966年（23岁）获得硕士学位，学士和硕士修的都是 <span class="desc" data-ref="qux">EECS</span><span class="cite" data-ref="foo"></span>。硕士毕业同年，他被美国前电信垄断公司AT＆T的研发部门贝尔实验室聘用，负责 <span class="desc" data-ref="quux">MULTICS</span> 项目，该项目是由贝尔实验室和通用电气和MIT合作的项目，是一个庞大，雄心勃勃和创新的操作系统，旨在支持数百个并发用户，不幸的是，该项目很快就变得笨拙，再加上它难以容纳三个以上的同时用户，贝尔实验室的管理层对该项目的进展不满意，最终退出了。贝尔实验室退出 MULTICS 项目后，就不知道 Ken 去做了什么了。
-    </p>
+<code>First release: 2019-01-01</code><br>
+<code>Update: 2019-01-04</code>
+<p>题记：1969年，26岁的 Ken Thompson。</p>
+<h1>UNIX - Ken Thompson 本纪</h1>
+<p>
+    Ken，1943年出生，1965年（22岁）本科毕业获学士学位，1966年（23岁）获得硕士学位，学士和硕士修的都是 <span class="desc" data-ref="qux">EECS</span><span class="cite" data-ref="foo"></span>。硕士毕业同年，他被美国前电信垄断公司AT＆T的研发部门贝尔实验室聘用，负责 <span class="desc" data-ref="quux">MULTICS</span> 项目，该项目是由贝尔实验室和通用电气和MIT合作的项目，是一个庞大，雄心勃勃和创新的操作系统，旨在支持数百个并发用户，不幸的是，该项目很快就变得笨拙，再加上它难以容纳三个以上的同时用户，贝尔实验室的管理层对该项目的进展不满意，最终退出了。贝尔实验室退出 MULTICS 项目后，就不知道 Ken 去做了什么了。
+</p>
 
-    <p>
-        1968年8月（硕士毕业2年后），妻子Bonnie生了儿子Corey<span class="cite" data-ref="bar"></span><span class="cite" data-ref="baz"></span>。
-    </p>
+<p>
+    1968年8月（硕士毕业2年后），妻子Bonnie生了儿子Corey<span class="cite" data-ref="bar"></span><span class="cite" data-ref="baz"></span>。
+</p>
 
-    <p>
-        时间来到1969年，夏。Ken 的妻子带着儿子去加州看望 Ken 的父母，因为爷爷奶奶还没见过这个孙子。妻子去了加州待了一个月<span class="cite" data-ref="bar"></span>。（未完待续）以下是要点大纲：
-    </p>
-    <ol>
-        <li>很多开发的叫 MULTICS，一个人开发的叫 UNIX</li>
-        <li>1969年夏天 Ken 开始的个人项目，还没有名字，一年后到了1970年，Kernighan开玩笑式的起了个名字叫Unix</li>
-        <li>你知道为啥Unix时间戳是从1970年开始计时吗，大概率是因为Unix是1970正式开发使用</li>
-        <li>Unix哲学就是先简单，然后串联，Unix 发扬光大了 MVP 的精神，提到 Unix 精神，人们仿佛能想到并明白什么 -- 就是先简单，然后串联。</li>
-        <li>Unix 在十岁前，是成长的十年，受到学界的大力完善，其中包括就是大名鼎鼎的<span class="desc" data-ref="uc-berkeley">加州大学伯克利分校</span>的 <span class="desc" data-ref="bsd">BSD</span>，1970年代由伯克利加州大学的学生<span class="cite" data-ref="bill-joy">比尔·乔伊（Bill Joy）</span>开创。等到80年代，商界才开始意识到 Unix 的价值，都是由年轻人创建的，年轻就是好，没心理负担。</li>
-    </ol>
-    <div>$a^2=1$</div>
+<p>
+    时间来到1969年，夏。Ken 的妻子带着儿子去加州看望 Ken 的父母，因为爷爷奶奶还没见过这个孙子。妻子去了加州待了一个月<span class="cite" data-ref="bar"></span>。（未完待续）以下是要点大纲：
+</p>
+<ol>
+    <li>很多开发的叫 MULTICS，一个人开发的叫 UNIX</li>
+    <li>1969年夏天 Ken 开始的个人项目，还没有名字，一年后到了1970年，Kernighan开玩笑式的起了个名字叫Unix</li>
+    <li>你知道为啥Unix时间戳是从1970年开始计时吗，大概率是因为Unix是1970正式开发使用</li>
+    <li>Unix哲学就是先简单，然后串联，Unix 发扬光大了 MVP 的精神，提到 Unix 精神，人们仿佛能想到并明白什么 -- 就是先简单，然后串联。</li>
+    <li>Unix 在十岁前，是成长的十年，受到学界的大力完善，其中包括就是大名鼎鼎的<span class="desc" data-ref="uc-berkeley">加州大学伯克利分校</span>的 <span class="desc" data-ref="bsd">BSD</span>，1970年代由伯克利加州大学的学生<span class="cite" data-ref="bill-joy">比尔·乔伊（Bill Joy）</span>开创。等到80年代，商界才开始意识到 Unix 的价值，都是由年轻人创建的，年轻就是好，没心理负担。</li>
+</ol>
+<div>$a^2=1$</div>
 
 <!-- List of Cites -->
 <div class="cite-list" style="display: none;">
