@@ -3,7 +3,8 @@
  *
  * 始于智, 成于简. 一个优秀的Tooltip的修养:
  *   1. Tooltiptext的位置要挨着Tooltip出现
- *   2. Tooltiptext支持HTML标签, 这样就可以支持文本, 图片, 音频, 视频, 超链接等各种富文本
+ *   2. Tooltiptext支持HTML标签, 这样就可以支持文本, 图片, 音频, 视频, 超链接等各种富文
+ *      本
  *   3. Tooltiptext支持字符串overflow断行
  *   4. Tooltiptext支持宽度自适应, max-width
  *   5. Tooltiptext的超链接点击在新标签页打开
@@ -25,8 +26,8 @@
  *
  * Tooltiptext的显示位置:
  *   暂且采用了较简单直观, 固定的方式
- *   1. 单行的Tooltip, 采用默认右下角, 再根据左墙, 底墙, 右下角的墙角三者的是否会碰壁来做
- *      调整;
+ *   1. 单行的Tooltip, 采用默认右下角, 再根据左墙, 底墙, 右下角的墙角三者的是否会碰壁来
+ *      做调整;
  *   2. 多行的Tooltip, 采用默认右上角 (暂时这么个逻辑), 再根据是否会碰到底墙来做调整.
  *
  * 本js文件可能的微小缺陷:
@@ -152,7 +153,7 @@ function placeTooltiptext(tooltip, tooltiptext) {
     if (isOneline(tooltip)) {
         // 根据tooltiptext的宽高和tooltip的边界矩形, 判定tooltiptext的left, top
         tooltiptextLeft = tooltipRectRelToPage.x;
-        tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h;
+        tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h + 3;
 
         // 根据tooltip边界矩形(相对于文档)以及视窗大小, 来调整tooltiptext
 
@@ -161,13 +162,14 @@ function placeTooltiptext(tooltip, tooltiptext) {
         ) {
             tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
                 - tooltiptextW;
-            tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h;
+            tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h
+                             + 3;
         }
         if (tooltipRectRelToView.bottom + tooltiptextH > windowWH.h &&
             tooltipRectRelToView.left + tooltiptextW < windowWH.w
         ) {
             tooltiptextLeft = tooltipRectRelToPage.x;
-            tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH;
+            tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH - 3;
 
         }
         if (tooltipRectRelToView.left + tooltiptextW > windowWH.w &&
@@ -175,7 +177,7 @@ function placeTooltiptext(tooltip, tooltiptext) {
         ) {
             tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
                 - tooltiptextW;
-            tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH;
+            tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH - 3;
         }
     }
 
