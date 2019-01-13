@@ -79,3 +79,10 @@ table, th, td {border: 1px solid black; border-spacing: 0;}
     hyphens: none;
     text-decoration: underline;
 }
+
+/* 利用css的counter添加自动添加标题编号 */
+body {counter-reset: foo;}
+h2::before {
+    counter-increment: foo;
+    content: counter(foo) ". ";
+}
