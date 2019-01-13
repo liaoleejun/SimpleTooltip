@@ -62,7 +62,7 @@ $(document).ready(function () {
     }
 
     // 3.a 生成排好序的 Cite list
-    $(document.body).append("<div><h2>Descriptions:</h2><ol id='descs'></ol></div>");
+    $(document.body).append("<div><h2>References:</h2><ol id='cites'></ol></div>");
     for (let i = 0; i < citesOrdered.length; i++) {
         let id = citesOrdered[i];
         let ttt = document.createElement('li');
@@ -70,7 +70,7 @@ $(document).ready(function () {
         document.getElementById("cites").appendChild(ttt);
     }
 
-    $(document.body).append("<div><h2>References:</h2><ol id='cites'></ol></div>");
+    $(document.body).append("<div><h2>Descriptions:</h2><ol id='descs'></ol></div>");
     // 3.b 生成排好序的 Descs list
     for (let i = 0; i < descsOrdered.length; i++) {
         let id = descsOrdered[i];
