@@ -70,13 +70,13 @@ $(document).ready(function () {
             removeTooltiptext();
             // 生成当前Tooltiptext
             createTooltiptext(_this);
-        }, 500);
+        }, 150);
     }).mouseleave(function () {
         // 清除鼠标进入Tooltip计时
         clearTimeout(enterTooltipTimer);
         leaveTooltipTimer = setTimeout(function () {
             removeTooltiptext();
-        }, 500);
+        }, 150);
     });
 
     // 鼠标进入与离开tooltiptext时的事件监听
@@ -88,7 +88,7 @@ $(document).ready(function () {
         function () {
             leaveTooltipTimer = setTimeout(function () {
                 removeTooltiptext();
-            }, 500);
+            }, 150);
         });
 });
 
@@ -109,7 +109,7 @@ function createTooltiptext(tooltip) {
     //                       "<div class='arrowBelow'></div>");
 
     // $("body").append(tooltiptext);
-    $(tooltiptext).hide().appendTo("body").fadeIn(200); // jQuery fade in effect
+    $(tooltiptext).hide().appendTo("body").fadeIn(100); // jQuery fade in effect
 
     // placeTooltiptext
     placeTooltiptext(tooltip, tooltiptext);

@@ -26,8 +26,8 @@ h2 {color: green;}
 /* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
 img {border: 2px solid black;}
 
-/* 行高设置为 1.5 倍*/
-p {line-height: 1.5; margin: 20px auto;}
+/* 行高设置为 1.6 倍*/
+p {line-height: 1.6; margin: 20px auto;}
 
 /* table设置边框 */
 table, th, td {border: 1px solid black; border-spacing: 0;}
