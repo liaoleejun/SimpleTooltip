@@ -84,5 +84,5 @@ table, th, td {border: 1px solid black; border-spacing: 0;}
 body {counter-reset: foo;}
 h2::before {
     counter-increment: foo;
-    content: counter(foo) ". ";
+    content: counter(foo, upper-roman) ". ";
 }

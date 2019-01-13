@@ -70,7 +70,7 @@ $(document).ready(function () {
         document.getElementById("cites").appendChild(ttt);
     }
 
-    $(document.body).append("<div><h2>Descriptions</h2><ol id='descs'></ol></div>");
+    $(document.body).append("<div><h2>Descriptions</h2><ul id='descs'></ul></div>");
     // 3.b 生成排好序的 Descs list
     for (let i = 0; i < descsOrdered.length; i++) {
         let id = descsOrdered[i];
