@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MySQL Server</title>
+    <link rel="stylesheet" href="../style/style.css">
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="../script/MathJaxInline.js"></script>
+    <script src="../script/jquery-3.3.1.js"></script>
+    <script src="../script/CiteNumber.js"></script>
+    <script src="../script/SimpleTooltip.js"></script>
+    <script src="../script/LinkOpenInNewTab.js"></script>
+</head>
+<body>
+<code>First release: 2019-01-13</code><br>
+<code>Update: 2019-01-13</code>
+<p>题记：MySQL。</p>
+<h1>MySQL 列传</h1>
+<h2>MySQL 社区版</h2>
+<p>
+    搜索<span data-dt="mysql-version">MySQL版本发布历史</span>, 可以看到2015年10月21日发布的5.7版, 然后在2018年4月19日直接发布8.0版 (本该5.8版)<span data-ct="mysql-wiki"></span>, 而当前 (2019-01-13) 最新版本也是8.0版, 都是<span data-dt="java-vesion">被Java教坏了</span>.
+</p>
+<h2>MySQL 集群版</h2>
+<p>MySQL有个<span data-dt="mysql-cge">集群 CGE</span> 版.<span data-ct="cite-mysql-cge"></span><span data-ct="cite-mysql-cge2"></span></p>
+<h2>MySQL 社区版安装</h2>
+<p>网上有网文说<span data-ct="mac-easy-design"></span>, macOS的设计使得很多任务很容易做到, 但是MySQL安装却不是这样. Oracle官网针对macOS提供了两种安装方式, 一种是<span data-dt="standard-macos-install">标准macOS安装包</span>Native DMG, 另一种是通用二进制包<span data-ct="oracle-mysql-official-website"></span>. 当然Oracle官网的从源代码安装也应该是适用macOS<span data-ct="install-from-source"></span>, 这是第三种方法, 一般都是高级玩家用的<span data-ct="sequelpro"></span>. 当然, 还有第四种, 使用Homebrew<span data-ct="github"></span>, 那还必须提一下使用MacPorts安装 (这算第五种)<span data-ct="sequelpro"></span>, 最后一种, 使用MAMP / XAMPP<span data-ct="sequelpro"></span>. 以下是列表总结:</p>
+<div>
+    <ol style="list-style-type:lower-latin">
+        <li>标准macOS安装包Native DMG</li>
+        <li>通用二进制包</li>
+        <li>从源代码安装</li>
+        <li>Homebrew</li>
+        <li>MacPorts</li>
+        <li>MAMP / XAMPP</li>
+    </ol>
+</div>
+<p>当然, 选择Oracle提供的标准macOS安装包Native DMG应该最方便的, 使用System Preferences pane的方式来启动/暂停MySQL服务器 (可选系统启动时自动运行MySQL服务器)<span data-ct="sequelpro"></span>.</p>
+
+<!-- List of Cites -->
+<div class="cite-list" style="display: none;">
+    <span id="mysql-wiki"><a href="https://en.wikipedia.org/wiki/MySQL#Release_history">https://en.wikipedia.org/wiki/MySQL#Release_history</a> "直接谷歌搜索 Mysql version List"</span>
+    <span id="cite-mysql-cge">缩写的全英文可以通过谷歌搜索到 <a href="https://www.mysql.com/products/">https://www.mysql.com/products/</a></span>
+    <span id="cite-mysql-cge2"><a href="https://lists.mysql.com/cluster/5122">https://lists.mysql.com/cluster/5122</a></span>
+    <span id="mac-easy-design">Mac OS X has a great design and a lot of tasks are really easy to do. Unfortunately if you want to have MySQL server installed on your Mac this is not always as simple as everything else. <a href="https://vladster.net/en/instructions/install-mysql-mac/">https://vladster.net/en/instructions/install-mysql-mac/</a></span>
+    <span id="oracle-mysql-official-website">Installing MySQL on macOS <a href="https://dev.mysql.com/doc/refman/5.7/en/osx-installation.html">https://dev.mysql.com/doc/refman/5.7/en/osx-installation.html</a></span>
+    <span id="install-from-source"><a href="https://dev.mysql.com/doc/refman/5.7/en/source-installation.html">https://dev.mysql.com/doc/refman/5.7/en/source-installation.html</a></span>
+    <span id="sequelpro"><a href="https://sequelpro.com/docs/ref/mysql/install-on-osx">https://sequelpro.com/docs/ref/mysql/install-on-osx</a></span>
+    <span id="github"><a href="https://gist.github.com/nrollr/3f57fc15ded7dddddcc4e82fe137b58e">https://gist.github.com/nrollr/3f57fc15ded7dddddcc4e82fe137b58e</a></span>
+</div>
+
+<!-- List of Descs -->
+<div class="desc-list" style="display: none;">
+    <span id="mysql-version">Mysql version List, Release history</span>
+    <span id="java-vesion">Java在2004年的时候, 直接由1.4版跳到了5.0版(本该1.5版)</span>
+    <span id="mysql-cge">Cluster Carrier Grade Edition 运营商级版</span>
+    <span id="standard-macos-install">standard MacOS installer package</span>
+</div>
+
+</body>
+</html>
