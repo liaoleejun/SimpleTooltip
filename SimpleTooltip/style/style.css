@@ -21,7 +21,7 @@ body {
     margin: 16px auto;
 }
 
-h2 {color: green;}
+h2, h3 {color: green;}
 
 /* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
 img {border: 2px solid black;}
