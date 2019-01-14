@@ -10,16 +10,7 @@ a:focus {}
 /* 跳到锚点时，高亮文本 */
 *:target {background-color: #ffa; -webkit-transition: all 1s linear;}
 
-body {
-    /*background-color: #F8F4E7;*/
-    /*color: #552800;*/
-    max-width: 600px;
-    border: 1px solid #552800;
-    border-radius: 5px;
-    outline: 0 solid #552800;
-    padding: 10px 10px 10px 20px;
-    margin: 16px auto;
-}
+
 
 h2, h3 {color: green;}
 
