@@ -33,7 +33,7 @@ p {line-height: 1.6; margin: 20px auto;}
 table, th, td {border: 1px solid black; border-spacing: 0;}
 
 /* cite 设置为小上标样式 small superscript, 即small-sup */
-.cite a {
+[data-ct] a {
     font-size: 70%;
     color: #0E48AA;
     line-height: 1;
@@ -41,7 +41,7 @@ table, th, td {border: 1px solid black; border-spacing: 0;}
     white-space: nowrap; /* let superscript no line break */
 }
 
-.desc {border-bottom: 1px dotted #4484C2;}
+[data-dt] {border-bottom: 1px dotted #4484C2;}
 
 /* css实现缩进效果 */
 .tab {margin-left: 40px;}
