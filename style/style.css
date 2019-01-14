@@ -21,7 +21,7 @@ body {
     margin: 16px auto;
 }
 
-h2 {color: green;}
+h2, h3 {color: green;}
 
 /* 使得图片有边框，避免四周全白图片和网页正文混为一体 */
 img {border: 2px solid black;}
@@ -77,7 +77,11 @@ table, th, td {border: 1px solid black; border-spacing: 0;}
 .tooltiptext a, #cites a {
     word-break: break-all;
     hyphens: none;
-    text-decoration: underline;
+}
+
+#cites ul, .tooltiptext ul {
+    margin: 0;
+    padding: 0 5px 0 20px;
 }
 
 /* 利用css的counter添加自动添加标题编号 */

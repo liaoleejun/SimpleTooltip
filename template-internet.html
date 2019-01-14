@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tooltip Template - Need Internet Access</title>
+    <!-- 提示框 Tooltip -->
+    <link rel="stylesheet" href="style/style.css">
+    <script src="script/jquery-3.3.1.js"></script>
+    <script src="script/CiteNumber.js"></script>
+    <script src="script/SimpleTooltip.js"></script>
+    <!-- 数学公式 -->
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+<h1>Tooltip Template - Need Internet Access</h1>
+
+<h2>提示框 SimpleTooltip.js</h2>
+<p><span data-dt="foo">HTML</span><span data-ct="bar"></span></p>
+
+<h2>代码高亮 highlight.js</h2>
+<pre><code>vim ~/.bash_profile
+# export PATH
+# 修改为
+# export PATH=$PATH:/usr/local/mysql/bin
+source ~/.bash_profile
+mysql --version
+</code></pre>
+
+<h2>数学公式 MathJax.js</h2>
+<div>$$a^2=1$$</div>
+
+<!-- List of Cites -->
+<div class="cite-list" style="display: none;">
+    <span id="bar"><a href="https://en.wikipedia.org/wiki/HTML">https://en.wikipedia.org/wiki/HTML</a></span>
+</div>
+
+<!-- List of Descriptions -->
+<div class="desc-list" style="display: none;">
+    <span id="foo">超文本标记语言 Hypertext Markup Language</span>
+</div>
+
+</body>
+</html>
