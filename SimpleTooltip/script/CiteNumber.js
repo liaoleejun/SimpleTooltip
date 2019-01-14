@@ -68,24 +68,24 @@ $(document).ready(function () {
         cites[i].firstChild.setAttribute('href', '#' + dataRef);
     }
 
-    /* 3.a 生成排好序的 Cite list */
-    $(document.body).append("<div><h2>References</h2><ol id='cites'></ol>" +
-                                                                      "</div>");
-    for (let i = 0; i < citesOrdered.length; i++) {
-        let id = citesOrdered[i];
-        let ttt = document.createElement('li');
-        ttt.appendChild(document.getElementById(id));
-        document.getElementById("cites").appendChild(ttt);
-    }
-
-    /* 3.b 生成排好序的 Descs list */
+    /* 3.a 生成排好序的 Descs list */
     $(document.body).append("<div><h2>Descriptions</h2><ul id='descs'></ul>" +
-                                                                      "</div>");
+        "</div>");
     for (let i = 0; i < descsOrdered.length; i++) {
         let id = descsOrdered[i];
         let ttt = document.createElement('li');
         ttt.innerHTML = "<b>" + descsConceptOrdered[i] + "</b>: ";
         ttt.appendChild(document.getElementById(id));
         document.getElementById("descs").appendChild(ttt);
+    }
+
+    /* 3.b 生成排好序的 Cite list */
+    $(document.body).append("<div><h2>References</h2><ol id='cites'></ol>" +
+        "</div>");
+    for (let i = 0; i < citesOrdered.length; i++) {
+        let id = citesOrdered[i];
+        let ttt = document.createElement('li');
+        ttt.appendChild(document.getElementById(id));
+        document.getElementById("cites").appendChild(ttt);
     }
 });
