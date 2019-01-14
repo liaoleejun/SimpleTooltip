@@ -77,7 +77,6 @@ table, th, td {border: 1px solid black; border-spacing: 0;}
 .tooltiptext a, #cites a {
     word-break: break-all;
     hyphens: none;
-    text-decoration: underline;
 }
 
 #cites ul, .tooltiptext ul {
