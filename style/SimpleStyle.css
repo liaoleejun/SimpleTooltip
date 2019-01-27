@@ -4,7 +4,7 @@
     border-bottom: 1px dotted #4484C2;
 }
 
-.tooltiptext {
+.tooltipcontent {
     position: absolute;
     display: inline-block;
     max-width: 360px;
@@ -31,14 +31,14 @@
     line-height: 1.0;
 }
 
-/* 设置tooltiptext的链接为按字符折行 */
-.tooltiptext a {
+/* 设置tooltipcontent的链接为按字符折行 */
+.tooltipcontent a {
     word-break: break-all;
     hyphens: none;
 }
 
-/* 调整tooltiptext的无序列表的位置 */
-.tooltiptext ul {
+/* 调整tooltipcontent的无序列表的位置 */
+.tooltipcontent ul {
     margin: 0;
     padding: 0 5px 0 20px;
 }

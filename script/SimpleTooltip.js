@@ -2,201 +2,201 @@
  * Copyright liaoleejun@gmail.com.
  *
  * 始于智, 成于简. 一个优秀的Tooltip的修养:
- *   1. Tooltiptext的位置要挨着Tooltip出现
- *   2. Tooltiptext支持HTML标签, 这样就可以支持文本, 图片, 音频, 视频, 超链接等各种富文
+ *   1. Tooltipcontent的位置要挨着Tooltip出现
+ *   2. Tooltipcontent支持HTML标签, 这样就可以支持文本, 图片, 音频, 视频, 超链接等各种富文
  *      本
- *   3. Tooltiptext支持字符串overflow断行
- *   4. Tooltiptext支持宽度自适应, max-width
- *   5. Tooltiptext的超链接点击在新标签页打开
- *   6. Tooltiptext支持自动朝向 (跟着鼠标, 然后只要考虑上下, 这是跟着光标的的)
- *   7. 支持离开Tooltip保持悬浮几百毫秒, 支持进入Tooltiptext保持悬浮几百毫秒
+ *   3. Tooltipcontent支持字符串overflow断行
+ *   4. Tooltipcontent支持宽度自适应, max-width
+ *   5. Tooltipcontent的超链接点击在新标签页打开
+ *   6. Tooltipcontent支持自动朝向 (跟着鼠标, 然后只要考虑上下, 这是跟着光标的的)
+ *   7. 支持离开Tooltip保持悬浮几百毫秒, 支持进入Tooltipcontent保持悬浮几百毫秒
  *   8. Tooltip折行而不是换行, 即span形式
  *   9. 引用编号如何不在开头出现. white-space: nowrap;
- *  10. 引用编号不会换行, 但是描述可以换行. tooltip换行问题, tooltiptext换行问题.
+ *  10. 引用编号不会换行, 但是描述可以换行. tooltip换行问题, Tooltipcontent换行问题.
  *  11. 最大宽度应该是用户设置的与页面允许的值, 二者中的较小值
- *  12. 可能需要点动画过渡显示Tooltiptext
+ *  12. 可能需要点动画过渡显示Tooltipcontent
  *
  * Tooltip是否换行, 即Tooltip是一行, 还是多行显示:
  *   实现了Tooltip多行显示 :)
  *
- * Tooltiptext是否带箭头:
+ * Tooltipcontent是否带箭头:
  *   1. 带箭头
  *   2. 不带箭头
  *   选择了不带箭头的实现方式.
  *
- * Tooltiptext的显示位置:
+ * Tooltipcontent的显示位置:
  *   暂且采用了较简单直观, 固定的方式
  *   1. 单行的Tooltip, 采用默认右下角, 再根据左墙, 底墙, 右下角的墙角三者的是否会碰壁来
  *      做调整;
  *   2. 多行的Tooltip, 采用默认右上角 (暂时这么个逻辑), 再根据是否会碰到底墙来做调整.
  *
  * 本js文件可能的微小缺陷:
- *   Tooltiptext的位置是通过offsetParent()累加计算得到的, 可能会有1到2个像素的位差, 但
+ *   Tooltipcontent的位置是通过offsetParent()累加计算得到的, 可能会有1到2个像素的位差, 但
  *   是1到2个像素的位差, 对于计算机屏幕来说真的是千分之一的位差了, 完全不足为虑呀! 目前尚
  *   未找到更好的方法.
  */
 
 
 /**
- * 监听class为tooltip的元素的鼠标悬浮事件, 浮现tooltiptext
+ * 监听class为tooltip的元素的鼠标悬浮事件, 浮现Tooltipcontent
  *
  * <xxx class="tooltip" data-ref="foo">
  * <xxx>
  * 一般是:
  * <span class="tooltip" data-ref="foo">
  * <span>
- * 正确显示tooltiptext, 只要两个参数: 位置边界矩形, 内容.
+ * 正确显示Tooltipcontent, 只要两个参数: 位置边界矩形, 内容.
  *   位置边界矩形由this计算得到, 内容由data-ref指向得到
  */
 $(document).ready(function () {
     let enterTooltipTimer;
     let leaveTooltipTimer;
-    let leaveTooltiptextTimer;
+    let leaveTooltipcontentTimer;
 
     // 鼠标进入与离开tooltip时的事件监听
     $(".tooltip").mouseenter(function () {
         let _this = this;
         // let _event = event;
 
-        // 清除鼠标离开Tooltip, Tooltiptext计时
+        // 清除鼠标离开Tooltip, Tooltipcontent计时
         clearTimeout(leaveTooltipTimer);
-        clearTimeout(leaveTooltiptextTimer);
+        clearTimeout(leaveTooltipcontentTimer);
         // 开始鼠标进入逻辑
         enterTooltipTimer = setTimeout(function () {
-            // 清除已有Tooltiptext
+            // 清除已有Tooltipcontent
             // 为什么mouseenter时要做这一步清除? 因为mouse一进入, leaveTooltipTimer,
-            // leaveTooltiptextTimer计时就立马被清除, 就不会删除屏幕上的Tooltiptext,
+            // leaveTooltipcontentTimer计时就立马被清除, 就不会删除屏幕上的Tooltipcontent,
             // 所以要加上这一步来清除
-            removeTooltiptext();
-            // 生成当前Tooltiptext
-            createTooltiptext(_this);
+            removeTooltipcontent();
+            // 生成当前Tooltipcontent
+            createTooltipcontent(_this);
         }, 150);
     }).mouseleave(function () {
         // 清除鼠标进入Tooltip计时
         clearTimeout(enterTooltipTimer);
         leaveTooltipTimer = setTimeout(function () {
-            removeTooltiptext();
+            removeTooltipcontent();
         }, 150);
     });
 
-    // 鼠标进入与离开tooltiptext时的事件监听
+    // 鼠标进入与离开Tooltipcontent时的事件监听
     // 使用jQuery on方法, 使用了event delegation概念
-    $(document.body).on("mouseenter", ".tooltiptext", [],
+    $(document.body).on("mouseenter", ".tooltipcontent", [],
         function () {
             clearTimeout(leaveTooltipTimer);
-        }).on("mouseleave", ".tooltiptext", [],
+        }).on("mouseleave", ".tooltipcontent", [],
         function () {
             leaveTooltipTimer = setTimeout(function () {
-                removeTooltiptext();
+                removeTooltipcontent();
             }, 150);
         });
 });
 
 
 /**
- * Create tooltiptext
+ * Create tooltipcontent
  * @param tooltip
  */
-function createTooltiptext(tooltip) {
-    // 在Body底部, 追加内容tooltiptext;
-    // 内容tooltiptext来自tooltip的属性data-ref的值
-    let tooltiptext = document.createElement("div");
+function createTooltipcontent(tooltip) {
+    // 在Body底部, 追加内容tooltipcontent;
+    // 内容tooltipcontent来自tooltip的属性data-ref的值
+    let tooltipcontent = document.createElement("div");
     let dataRef = $(tooltip).attr("data-ref");
-    tooltiptext.innerHTML = $("#" + dataRef).html();
-    $(tooltiptext).attr("class", "tooltiptext");
-    // 暂时不要tooltiptext的箭头Arrow
-    // $(tooltiptext).append("<div class='arrowAbove'></div>" +
+    tooltipcontent.innerHTML = $("#" + dataRef).html();
+    $(tooltipcontent).attr("class", "tooltipcontent");
+    // 暂时不要tooltipcontent的箭头Arrow
+    // $(tooltipcontent).append("<div class='arrowAbove'></div>" +
     //                       "<div class='arrowBelow'></div>");
 
-    // $("body").append(tooltiptext);
-    $(tooltiptext).hide().appendTo("body").fadeIn(100); // jQuery fade in effect
+    // $("body").append(tooltipcontent);
+    $(tooltipcontent).hide().appendTo("body").fadeIn(100); // jQuery fade in effect
 
-    // placeTooltiptext
-    placeTooltiptext(tooltip, tooltiptext);
+    // placeTooltipcontent
+    placeTooltipcontent(tooltip, tooltipcontent);
 }
 
 
 /**
- * Remove tooltiptext
+ * Remove tooltipcontent
  */
-function removeTooltiptext() {
-    let element = $(".tooltiptext")[0];
+function removeTooltipcontent() {
+    let element = $(".tooltipcontent")[0];
     if (element !== undefined) { // 为什么要做这一步判断? 因为首次鼠标悬浮到tooltip上, 还
-        // 没有tooltiptext, 如果不做这一步判断, js会报错而终止
+        // 没有tooltipcontent, 如果不做这一步判断, js会报错而终止
         // 继续执行
         element.parentNode.removeChild(element);
     }
 }
 
 /**
- * Place Tooltiptext
+ * Place Tooltipcontent
  * 区分讨论tooltip是一行还是多行?
- *   如果是一行, 默认是放置在右下角, tooltip和tooltiptext左边对齐, 然后判断是在窗口的底
+ *   如果是一行, 默认是放置在右下角, tooltip和tooltipcontent左边对齐, 然后判断是在窗口的底
  *   部, 右边, 右下角, 来做调整
- *   如果是多行, 默认是放置在tooltip的上面, 左上角, tooltip和tooltiptext右边对齐, 然后
+ *   如果是多行, 默认是放置在tooltip的上面, 左上角, tooltip和tooltipcontent右边对齐, 然后
  *   判断是否在窗口的底部, 来做调整. Note: 如果在是多行, 其实还可以根据鼠标进入的位置来放
- *   置tooltiptext, 这里为了简单, 暂时不实现这样的逻辑; 其实负责, 应该有简单的级联模型来
+ *   置tooltipcontent, 这里为了简单, 暂时不实现这样的逻辑; 其实负责, 应该有简单的级联模型来
  *   完成.
  * @param tooltip
- * @param tooltiptext
+ * @param tooltipcontent
  */
-function placeTooltiptext(tooltip, tooltiptext) {
-    // 获取在Body底部追加的tooltiptext的宽, 高
-    let tooltiptextW = $(tooltiptext).outerWidth(true);
-    let tooltiptextH = $(tooltiptext).outerHeight(true);
+function placeTooltipcontent(tooltip, tooltipcontent) {
+    // 获取在Body底部追加的tooltipcontent的宽, 高
+    let tooltipcontentW = $(tooltipcontent).outerWidth(true);
+    let tooltipcontentH = $(tooltipcontent).outerHeight(true);
     let tooltipRectRelToPage = getRectRelativeToPage(tooltip);
     let tooltipRectRelToView = tooltip.getBoundingClientRect();
     let windowWH = getWindowWH();
-    let tooltiptextLeft;
-    let tooltiptextTop;
+    let tooltipcontentLeft;
+    let tooltipcontentTop;
 
     if (isOneline(tooltip)) {
-        // 根据tooltiptext的宽高和tooltip的边界矩形, 判定tooltiptext的left, top
-        tooltiptextLeft = tooltipRectRelToPage.x;
-        tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h + 3;
+        // 根据tooltipcontent的宽高和tooltip的边界矩形, 判定tooltipcontent的left, top
+        tooltipcontentLeft = tooltipRectRelToPage.x;
+        tooltipcontentTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h + 3;
 
-        // 根据tooltip边界矩形(相对于文档)以及视窗大小, 来调整tooltiptext
+        // 根据tooltip边界矩形(相对于文档)以及视窗大小, 来调整tooltipcontent
 
-        if (tooltipRectRelToView.left + tooltiptextW > windowWH.w &&
-            tooltipRectRelToView.bottom + tooltiptextH < windowWH.h
+        if (tooltipRectRelToView.left + tooltipcontentW > windowWH.w &&
+            tooltipRectRelToView.bottom + tooltipcontentH < windowWH.h
         ) {
-            tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
-                - tooltiptextW;
-            tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h
+            tooltipcontentLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
+                - tooltipcontentW;
+            tooltipcontentTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h
                              + 3;
         }
-        if (tooltipRectRelToView.bottom + tooltiptextH > windowWH.h &&
-            tooltipRectRelToView.left + tooltiptextW < windowWH.w
+        if (tooltipRectRelToView.bottom + tooltipcontentH > windowWH.h &&
+            tooltipRectRelToView.left + tooltipcontentW < windowWH.w
         ) {
-            tooltiptextLeft = tooltipRectRelToPage.x;
-            tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH - 3;
+            tooltipcontentLeft = tooltipRectRelToPage.x;
+            tooltipcontentTop = tooltipRectRelToPage.y - tooltipcontentH - 3;
 
         }
-        if (tooltipRectRelToView.left + tooltiptextW > windowWH.w &&
-            tooltipRectRelToView.bottom + tooltiptextH > windowWH.h
+        if (tooltipRectRelToView.left + tooltipcontentW > windowWH.w &&
+            tooltipRectRelToView.bottom + tooltipcontentH > windowWH.h
         ) {
-            tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
-                - tooltiptextW;
-            tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH - 3;
+            tooltipcontentLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
+                - tooltipcontentW;
+            tooltipcontentTop = tooltipRectRelToPage.y - tooltipcontentH - 3;
         }
     }
 
     if (! isOneline(tooltip)) {
-        // 根据tooltiptext的宽高和tooltip的边界矩形, 判定tooltiptext的left, top
-        tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
-            - tooltiptextW;
-        tooltiptextTop = tooltipRectRelToPage.y - tooltiptextH;
+        // 根据tooltipcontent的宽高和tooltip的边界矩形, 判定tooltipcontent的left, top
+        tooltipcontentLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
+            - tooltipcontentW;
+        tooltipcontentTop = tooltipRectRelToPage.y - tooltipcontentH;
 
-        if (tooltipRectRelToView.top - tooltiptextH < 0) {
-            tooltiptextLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
-                - tooltiptextW;
-            tooltiptextTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h;
+        if (tooltipRectRelToView.top - tooltipcontentH < 0) {
+            tooltipcontentLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
+                - tooltipcontentW;
+            tooltipcontentTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h;
         }
     }
 
-    $(tooltiptext).css({
-        "left": tooltiptextLeft + "px",
-        "top": tooltiptextTop + "px"
+    $(tooltipcontent).css({
+        "left": tooltipcontentLeft + "px",
+        "top": tooltipcontentTop + "px"
     });
 }
 
