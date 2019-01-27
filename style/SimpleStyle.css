@@ -1,0 +1,44 @@
+@charset "utf-8";
+
+.tooltip {
+    border-bottom: 1px dotted #4484C2;
+}
+
+.tooltiptext {
+    position: absolute;
+    display: inline-block;
+    max-width: 360px;
+
+    padding: 5px 5px;
+    margin-left: 0;
+    background-color: lightyellow;
+    color: black;
+    border: solid 1px;
+
+    box-shadow: 2px 2px 2px gray;
+    text-align: left;
+    border-radius: 6px;
+    font-size: medium;
+
+    word-wrap: break-word;
+    word-break: break-word; /*word-break: break-all;*/
+    overflow-wrap: break-word;
+    /*hyphenate-character: auto;*/
+    /*hyphens: auto;*/
+    -moz-hyphens: auto;
+    z-index: 1;
+
+    line-height: 1.0;
+}
+
+/* 设置tooltiptext的链接为按字符折行 */
+.tooltiptext a {
+    word-break: break-all;
+    hyphens: none;
+}
+
+/* 调整tooltiptext的无序列表的位置 */
+.tooltiptext ul {
+    margin: 0;
+    padding: 0 5px 0 20px;
+}

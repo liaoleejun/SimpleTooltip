@@ -2,29 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tooltip Template</title>
-    <!-- 提示框 Tooltip -->
-    <link rel="stylesheet" href="style/style.css">
+    <title>Tooltip</title>
+    <link rel="stylesheet" href="style/SimpleStyle.css">
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
     <script src="script/jquery-3.3.1.js"></script>
-    <script src="script/CiteNumber.js"></script>
     <script src="script/SimpleTooltip.js"></script>
 </head>
 
 <body>
-<h1>Tooltip Template</h1>
-
-<h2>提示框 SimpleTooltip.js</h2>
-<p><span data-dt="foo">HTML</span><span data-ct="bar"></span></p>
-
-<!-- List of Cites -->
-<div class="cite-list" style="display: none;">
-    <span id="bar"><a href="https://en.wikipedia.org/wiki/HTML">https://en.wikipedia.org/wiki/HTML</a></span>
-</div>
-
-<!-- List of Descriptions -->
-<div class="desc-list" style="display: none;">
-    <span id="foo">超文本标记语言 Hypertext Markup Language</span>
-</div>
-
+    <p>Do you think <span class="tooltip" data-ref="tooltip-content-description">Tooltip</span> is a good thing?</p>
+    <div style="display: none;">
+        <div id="tooltip-content-description">Tooltip，中文可以翻译为提示框。The tooltip or infotip or a hint is a common graphical user interface element. Wikipedia URL: <a href="https://en.wikipedia.org/wiki/Tooltip">https://en.wikipedia.org/wiki/Tooltip</a></div>
+    </div>
 </body>
 </html>
