@@ -3,8 +3,8 @@
  *
  * 始于智, 成于简. 一个优秀的Tooltip的修养:
  *   1. Tooltipcontent的位置要挨着Tooltip出现
- *   2. Tooltipcontent支持HTML标签, 这样就可以支持文本, 图片, 音频, 视频, 超链接等各种富文
- *      本
+ *   2. Tooltipcontent支持HTML标签, 这样就可以支持文本, 图片, 音频, 视频, 超链接等各种
+ *   富文本
  *   3. Tooltipcontent支持字符串overflow断行
  *   4. Tooltipcontent支持宽度自适应, max-width
  *   5. Tooltipcontent的超链接点击在新标签页打开
@@ -31,9 +31,9 @@
  *   2. 多行的Tooltip, 采用默认右上角 (暂时这么个逻辑), 再根据是否会碰到底墙来做调整.
  *
  * 本js文件可能的微小缺陷:
- *   Tooltipcontent的位置是通过offsetParent()累加计算得到的, 可能会有1到2个像素的位差, 但
- *   是1到2个像素的位差, 对于计算机屏幕来说真的是千分之一的位差了, 完全不足为虑呀! 目前尚
- *   未找到更好的方法.
+ *   Tooltipcontent的位置是通过offsetParent()累加计算得到的, 可能会有1到2个像素的位差,
+ *   但是1到2个像素的位差, 对于计算机屏幕来说真的是千分之一的位差了, 完全不足为虑呀! 目前
+ *   尚未找到更好的方法.
  */
 
 
@@ -65,8 +65,8 @@ $(document).ready(function () {
         enterTooltipTimer = setTimeout(function () {
             // 清除已有Tooltipcontent
             // 为什么mouseenter时要做这一步清除? 因为mouse一进入, leaveTooltipTimer,
-            // leaveTooltipcontentTimer计时就立马被清除, 就不会删除屏幕上的Tooltipcontent,
-            // 所以要加上这一步来清除
+            // leaveTooltipcontentTimer计时就立马被清除, 就不会删除屏幕上的
+            // Tooltipcontent, 所以要加上这一步来清除
             removeTooltipcontent();
             // 生成当前Tooltipcontent
             createTooltipcontent(_this);
@@ -109,7 +109,8 @@ function createTooltipcontent(tooltip) {
     //                       "<div class='arrowBelow'></div>");
 
     // $("body").append(tooltipcontent);
-    $(tooltipcontent).hide().appendTo("body").fadeIn(100); // jQuery fade in effect
+    $(tooltipcontent).hide().appendTo("body").fadeIn(100); // jQuery fade in
+                                                           // effect
 
     // placeTooltipcontent
     placeTooltipcontent(tooltip, tooltipcontent);
@@ -121,9 +122,9 @@ function createTooltipcontent(tooltip) {
  */
 function removeTooltipcontent() {
     let element = $(".tooltipcontent")[0];
-    if (element !== undefined) { // 为什么要做这一步判断? 因为首次鼠标悬浮到tooltip上, 还
-        // 没有tooltipcontent, 如果不做这一步判断, js会报错而终止
-        // 继续执行
+    if (element !== undefined) { // 为什么要做这一步判断? 因为首次鼠标悬浮到tooltip
+                                 // 上, 还没有tooltipcontent, 如果不做这一步判断,
+                                 // js会报错而终止继续执行
         element.parentNode.removeChild(element);
     }
 }
@@ -131,11 +132,12 @@ function removeTooltipcontent() {
 /**
  * Place Tooltipcontent
  * 区分讨论tooltip是一行还是多行?
- *   如果是一行, 默认是放置在右下角, tooltip和tooltipcontent左边对齐, 然后判断是在窗口的底
- *   部, 右边, 右下角, 来做调整
- *   如果是多行, 默认是放置在tooltip的上面, 左上角, tooltip和tooltipcontent右边对齐, 然后
- *   判断是否在窗口的底部, 来做调整. Note: 如果在是多行, 其实还可以根据鼠标进入的位置来放
- *   置tooltipcontent, 这里为了简单, 暂时不实现这样的逻辑; 其实负责, 应该有简单的级联模型来
+ *   如果是一行, 默认是放置在右下角, tooltip和tooltipcontent左边对齐, 然后判断是在窗口
+ *   的底部, 右边, 右下角, 来做调整
+ *   如果是多行, 默认是放置在tooltip的上面, 左上角, tooltip和tooltipcontent右边对齐,
+ *   然后判断是否在窗口的底部, 来做调整. Note: 如果在是多行, 其实还可以根据鼠标进入的位置
+ *   来放置tooltipcontent, 这里为了简单, 暂时不实现这样的逻辑; 其实负责, 应该有简单的级
+ *   联模型来
  *   完成.
  * @param tooltip
  * @param tooltipcontent
@@ -151,7 +153,8 @@ function placeTooltipcontent(tooltip, tooltipcontent) {
     let tooltipcontentTop;
 
     if (isOneline(tooltip)) {
-        // 根据tooltipcontent的宽高和tooltip的边界矩形, 判定tooltipcontent的left, top
+        // 根据tooltipcontent的宽高和tooltip的边界矩形, 判定tooltipcontent的left,
+        // top
         tooltipcontentLeft = tooltipRectRelToPage.x;
         tooltipcontentTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h + 3;
 
@@ -182,7 +185,8 @@ function placeTooltipcontent(tooltip, tooltipcontent) {
     }
 
     if (! isOneline(tooltip)) {
-        // 根据tooltipcontent的宽高和tooltip的边界矩形, 判定tooltipcontent的left, top
+        // 根据tooltipcontent的宽高和tooltip的边界矩形, 判定tooltipcontent的left,
+        // top
         tooltipcontentLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
             - tooltipcontentW;
         tooltipcontentTop = tooltipRectRelToPage.y - tooltipcontentH;
@@ -206,10 +210,10 @@ function placeTooltipcontent(tooltip, tooltipcontent) {
  *
  * 搜遍了网上问答, 网络博客, 总结一条思路是先获取元素的Top, left, width, height信息, 再
  * 获取line-height, 然后前者除以后者来获取行数, 行高没有非常可信靠谱的方法, 包括网友的
- * computeStyleValue的方法, 这个方法在Chrome下会返回normal. 后面, 还查找了normal是多少
- * px的字体 https://developer.mozilla.org/en-US/docs/Web/CSS/line-height, 一般
- * normal默认是1.2倍, 但是这都不靠谱呀. 最后, 突然想到的试探法, 人为先增加空格, 根据这个空
- * 格得出行高, 再删除这个空格, 是不是非常巧妙?!
+ * computeStyleValue的方法, 这个方法在Chrome下会返回normal. 后面, 还查找了normal是多
+ * 少 * px的字体 https://developer.mozilla.org/en-US/docs/Web/CSS/line-height, 一
+ * 般normal默认是1.2倍, 但是这都不靠谱呀. 最后, 突然想到的试探法, 人为先增加空格, 根据这
+ * 个空格得出行高, 再删除这个空格, 是不是非常巧妙?!
  * $("elem").append("<span id='elem-append-childd'>&nbsp;</span>");
  * $("elem").prepend("<span id='bar-prepend-childd'>&nbsp;</span>");
  * $("elem").height();
