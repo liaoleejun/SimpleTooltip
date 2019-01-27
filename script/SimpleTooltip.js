@@ -37,6 +37,10 @@
  */
 
 
+// tooltip timeout
+ttTimeout = 150;
+
+
 /**
  * 监听class为tooltip的元素的鼠标悬浮事件, 浮现Tooltipcontent
  *
@@ -70,13 +74,13 @@ $(document).ready(function () {
             removeTooltipcontent();
             // 生成当前Tooltipcontent
             createTooltipcontent(_this);
-        }, 150);
+        }, ttTimeout);
     }).mouseleave(function () {
         // 清除鼠标进入Tooltip计时
         clearTimeout(enterTooltipTimer);
         leaveTooltipTimer = setTimeout(function () {
             removeTooltipcontent();
-        }, 150);
+        }, ttTimeout);
     });
 
     // 鼠标进入与离开Tooltipcontent时的事件监听
@@ -88,7 +92,7 @@ $(document).ready(function () {
         function () {
             leaveTooltipTimer = setTimeout(function () {
                 removeTooltipcontent();
-            }, 150);
+            }, ttTimeout);
         });
 });
 
