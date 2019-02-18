@@ -6,6 +6,10 @@ DONE
 
 TODO
 
+  * 突然的灵感: 通过动态添加和删除class名的方式, 使得鼠标悬停在Tooltip与TooltipContent时,
+    TooltipContent都不消失 -- 而现在是当TooltipContent打开时, 鼠标再移动到Tooltip时,
+    会一下闪.
+
   * 右边有问题（找到原因，是因为width算了padding两遍）。但是不能在原地
     生成元素，因为原地生成的元素会继承父类的width，所以当初是考虑到这
     点才在body末尾生成临时元素。
@@ -62,3 +66,15 @@ TODO
   * 为什么<div><a>xxx</a><div>yyyy</div></div>, 不直接<a>xxx<div></div></a>, 因为标签a不宜有div这些标签, 真的吗？
 
 分析了谷歌的翻译，是在body下面追加一个div，然后确定这个div的位置
+
+Misc
+
+## English
+### TL;DR
+### Detail
+
+## 为什么采用在html的body末尾append元素，而不是在tooltip直接测试
+
+因为在原地tooltip直接添加，因为原地生成的元素会继承父类的width，所以当初是考虑到这点才在body末尾生成临时元素。
+
+## 中文
