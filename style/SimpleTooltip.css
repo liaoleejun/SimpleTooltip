@@ -1,7 +1,10 @@
 @charset "utf-8";
 
 .tooltip {
-    border-bottom: 1px dotted #4484C2;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px dotted #aba3a3;
+    /*border-bottom: 1px dotted #4484C2;*/
 }
 
 .tooltipcontent {
