@@ -125,8 +125,8 @@ function createTooltipcontent(tooltip) {
     // 在Body底部, 追加内容tooltipcontent;
     // 内容tooltipcontent来自tooltip的属性data-ref的值
     let tooltipcontent = document.createElement("div");
-    let dataRef = $(tooltip).attr("data-ref");
-    tooltipcontent.innerHTML = $("#" + dataRef).html();
+    let dataRef = $(tooltip).attr("href");
+    tooltipcontent.innerHTML = $(dataRef).html();
     $(tooltipcontent).attr("class", "tooltipcontent");
     // 暂时不要tooltipcontent的箭头Arrow
     // $(tooltipcontent).append("<div class='arrowAbove'></div>" +
