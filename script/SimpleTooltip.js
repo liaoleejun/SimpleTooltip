@@ -58,30 +58,37 @@ $(document).ready(function () {
     let leaveTooltipcontentTimer;
 
     // 鼠标进入与离开tooltip时的事件监听
-    $(".tooltip").mouseenter(function () {
-        let _this = this;
-        // let _event = event;
+    $(document.body).on("mouseenter", ".tooltip", [],
+        function () {
+            let _this = this;
+            // let _event = event;
 
-        // 清除鼠标离开Tooltip, Tooltipcontent计时
-        clearTimeout(leaveTooltipTimer);
-        clearTimeout(leaveTooltipcontentTimer);
-        // 开始鼠标进入逻辑
-        enterTooltipTimer = setTimeout(function () {
-            // 清除已有Tooltipcontent
-            // 为什么mouseenter时要做这一步清除? 因为mouse一进入, leaveTooltipTimer,
-            // leaveTooltipcontentTimer计时就立马被清除, 就不会删除屏幕上的
-            // Tooltipcontent, 所以要加上这一步来清除
-            removeTooltipcontent();
-            // 生成当前Tooltipcontent
-            createTooltipcontent(_this);
-        }, ttTimeout);
-    }).mouseleave(function () {
-        // 清除鼠标进入Tooltip计时
-        clearTimeout(enterTooltipTimer);
-        leaveTooltipTimer = setTimeout(function () {
-            removeTooltipcontent();
-        }, ttTimeout);
-    });
+            // 清除鼠标离开Tooltip, Tooltipcontent计时
+            clearTimeout(leaveTooltipTimer);
+            clearTimeout(leaveTooltipcontentTimer);
+            // 开始鼠标进入逻辑
+            enterTooltipTimer = setTimeout(function () {
+                // 清除已有Tooltipcontent
+                // 为什么mouseenter时要做这一步清除? 因为mouse一进入, leaveTooltipTimer,
+                // leaveTooltipcontentTimer计时就立马被清除, 就不会删除屏幕上的
+                // Tooltipcontent, 所以要加上这一步来清除
+                if ($(_this).parent().prop('className') !== "tooltipcontent") {
+                    removeTooltipcontent();
+                }
+                // 生成当前Tooltipcontent
+                createTooltipcontent(_this);
+            }, ttTimeout);
+        }).on("mouseleave", ".tooltip", [],
+        function () {
+            let _this = this;
+            // 清除鼠标进入Tooltip计时
+            clearTimeout(enterTooltipTimer);
+            leaveTooltipTimer = setTimeout(function () {
+                if ($(_this).parent().prop('className') !== "tooltipcontent") {
+                    removeTooltipcontent();
+                }
+            }, ttTimeout);
+        });
 
     // 鼠标进入与离开Tooltipcontent时的事件监听
     // 使用jQuery on方法, 使用了event delegation概念
@@ -145,11 +152,14 @@ function createTooltipcontent(tooltip) {
  * Remove tooltipcontent
  */
 function removeTooltipcontent() {
-    let element = $(".tooltipcontent")[0];
-    if (element !== undefined) { // 为什么要做这一步判断? 因为首次鼠标悬浮到tooltip
-                                 // 上, 还没有tooltipcontent, 如果不做这一步判断,
-                                 // js会报错而终止继续执行
-        element.parentNode.removeChild(element);
+    let tooltipcontent = $(".tooltipcontent");
+    for (let i = 0; i < tooltipcontent.length; i++) {
+        let element = tooltipcontent[i];
+        if (element !== undefined) { // 为什么要做这一步判断? 因为首次鼠标悬浮到tooltip
+            // 上, 还没有tooltipcontent, 如果不做这一步判断,
+            // js会报错而终止继续执行
+            element.parentNode.removeChild(element);
+        }
     }
 }
 
@@ -191,7 +201,7 @@ function placeTooltipcontent(tooltip, tooltipcontent) {
             tooltipcontentLeft = tooltipRectRelToPage.x + tooltipRectRelToPage.w
                 - tooltipcontentW;
             tooltipcontentTop = tooltipRectRelToPage.y + tooltipRectRelToPage.h
-                             + 3;
+                + 3;
         }
         if (tooltipRectRelToView.bottom + tooltipcontentH > windowWH.h &&
             tooltipRectRelToView.left + tooltipcontentW < windowWH.w
